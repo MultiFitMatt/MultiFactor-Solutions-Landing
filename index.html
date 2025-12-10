@@ -9,43 +9,34 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --teal: #26e5a4;
       --blue: #3b82f6;
       --purple: #8b5cf6;
       --red: #ef4444;
+      --yellow: #fbbf24;
       --black: #000000;
-      --surface: rgba(255,255,255,0.03);
-      --surface-hover: rgba(255,255,255,0.06);
+      --surface: #0a0a0c;
       --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(255,255,255,0.15);
       --text: #ffffff;
-      --text-body: #e5e5e5;
       --text-secondary: #999999;
       --text-muted: #666666;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--black);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
 
-    /* Noise texture */
+    /* Subtle noise texture */
     body::before {
       content: '';
       position: fixed;
@@ -56,7 +47,7 @@
       z-index: 1000;
     }
 
-    /* Ambient orbs */
+    /* Ambient glow - static, no animation */
     .ambient {
       position: fixed;
       inset: 0;
@@ -65,56 +56,20 @@
       overflow: hidden;
     }
 
-    .orb {
+    .glow {
       position: absolute;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.12;
-      animation: float 20s ease-in-out infinite;
+      filter: blur(120px);
+      opacity: 0.08;
     }
 
-    .orb-1 {
-      top: 5%;
-      right: 10%;
-      width: 600px;
-      height: 600px;
-      background: var(--teal);
-    }
+    .glow-1 { top: 0; right: 10%; width: 600px; height: 600px; background: var(--teal); }
+    .glow-2 { bottom: 0; left: 5%; width: 500px; height: 500px; background: var(--purple); }
+    .glow-3 { top: 40%; left: 30%; width: 400px; height: 400px; background: var(--blue); }
 
-    .orb-2 {
-      bottom: 10%;
-      left: 5%;
-      width: 500px;
-      height: 500px;
-      background: var(--purple);
-      animation-delay: -7s;
-    }
+    .content { position: relative; z-index: 2; }
 
-    .orb-3 {
-      top: 40%;
-      left: 30%;
-      width: 400px;
-      height: 400px;
-      background: var(--blue);
-      animation-delay: -14s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(40px, -40px) scale(1.05); }
-      66% { transform: translate(-30px, 30px) scale(0.95); }
-    }
-
-    .content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
     /* NAV */
     nav {
@@ -124,13 +79,12 @@
       right: 0;
       z-index: 100;
       padding: 20px 0;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
 
     nav.scrolled {
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -143,227 +97,172 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
       color: var(--text);
     }
 
     .logo-icon {
-      width: 36px;
-      height: 36px;
-    }
-
-    .logo-icon svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .logo-text {
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-links {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
     }
+
+    .logo-text { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; }
+
+    .nav-links { display: flex; align-items: center; gap: 8px; }
 
     .nav-link {
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
-      padding: 10px 16px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: color 0.2s;
     }
 
-    .nav-link:hover {
-      color: var(--text);
-      background: var(--surface);
-    }
+    .nav-link:hover { color: var(--text); }
 
     .nav-cta {
-      padding: 10px 24px;
+      padding: 10px 20px;
       background: var(--text);
       color: var(--black);
-      border-radius: 100px;
+      border-radius: 8px;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 600;
       text-decoration: none;
-      transition: all 0.2s ease;
-      margin-left: 8px;
+      margin-left: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .nav-cta:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 32px rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255,255,255,0.2);
     }
 
     /* HERO */
     .hero {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 140px 0 100px;
+      align-items: center;
+      padding: 120px 0 80px;
     }
 
-    .hero-content {
-      max-width: 900px;
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
     }
 
-    .hero h1 {
-      font-size: clamp(44px, 8vw, 80px);
+    .hero-content h1 {
+      font-size: clamp(44px, 5.5vw, 72px);
       font-weight: 900;
-      line-height: 1.0;
-      letter-spacing: -0.04em;
-      margin-bottom: 0;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
     }
 
-    .hero h1 .line {
-      display: block;
-    }
-
-    .hero h1 .line-2 {
-      margin-top: -0.05em;
-    }
-
-    .hero h1 .line-3 {
-      margin-top: 0.1em;
-    }
-
-    .hero h1 .healthcare {
-      background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+    .healthcare {
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      color: #ffffff;
     }
 
-    .hero h1 .problem {
+    .problem {
       background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      color: #ef4444;
     }
 
-    .hero h1 .mf {
-      background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 100%);
+    .mf-solution {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 50%, var(--purple) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      color: var(--teal);
     }
 
-    .hero h1 .solution {
+    .mf-solution em {
       font-style: italic;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: var(--purple);
     }
 
-    /* Rotating Taglines */
-    .rotating-tagline-container {
-      height: 48px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      margin: 32px 0 40px;
+    /* Rotating tagline - smooth crossfade */
+    .tagline-container {
+      height: 28px;
       position: relative;
+      margin-bottom: 32px;
+      overflow: hidden;
     }
 
-    .rotating-tagline {
+    .tagline {
       position: absolute;
-      font-size: 18px;
-      font-weight: 400;
-      letter-spacing: 0.01em;
+      font-size: 16px;
+      font-weight: 500;
       color: var(--text-secondary);
       opacity: 0;
-      animation: taglineFade 48s infinite;
+      transition: opacity 0.6s ease;
     }
 
-    .rotating-tagline:nth-child(1)  { animation-delay: 0s; }
-    .rotating-tagline:nth-child(2)  { animation-delay: 4s; }
-    .rotating-tagline:nth-child(3)  { animation-delay: 8s; }
-    .rotating-tagline:nth-child(4)  { animation-delay: 12s; }
-    .rotating-tagline:nth-child(5)  { animation-delay: 16s; }
-    .rotating-tagline:nth-child(6)  { animation-delay: 20s; }
-    .rotating-tagline:nth-child(7)  { animation-delay: 24s; }
-    .rotating-tagline:nth-child(8)  { animation-delay: 28s; }
-    .rotating-tagline:nth-child(9)  { animation-delay: 32s; }
-    .rotating-tagline:nth-child(10) { animation-delay: 36s; }
-    .rotating-tagline:nth-child(11) { animation-delay: 40s; }
-    .rotating-tagline:nth-child(12) { animation-delay: 44s; }
-
-    @keyframes taglineFade {
-      0%, 100% { opacity: 0; transform: translateY(10px); }
-      2%, 6% { opacity: 1; transform: translateY(0); }
-      8%, 100% { opacity: 0; transform: translateY(-10px); }
-    }
+    .tagline.active { opacity: 1; }
 
     .hero-subtitle {
       font-size: 18px;
       color: var(--text-secondary);
-      max-width: 600px;
-      margin-bottom: 48px;
       line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 520px;
     }
 
-    .hero-subtitle strong {
-      color: var(--text);
-      font-weight: 600;
-    }
+    .hero-subtitle strong { color: var(--text); font-weight: 600; }
 
     .hero-ctas {
       display: flex;
       gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 64px;
+      margin-bottom: 48px;
     }
 
     .btn {
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      padding: 14px 32px;
-      border-radius: 100px;
-      font-size: 15px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
     }
 
     .btn-primary {
-      background: rgba(255,255,255,0.95);
+      background: var(--teal);
       color: var(--black);
     }
 
     .btn-primary:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 32px rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(38, 229, 164, 0.3);
     }
 
     .btn-secondary {
-      background: transparent;
+      background: rgba(255,255,255,0.05);
       color: var(--text);
-      border: 1px solid var(--border-hover);
+      border: 1px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: var(--surface);
-      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
     }
 
-    /* Hero Stats */
     .hero-stats {
       display: flex;
       gap: 48px;
@@ -373,393 +272,347 @@
 
     .hero-stat .number {
       font-size: 32px;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: -0.02em;
-      margin-bottom: 4px;
-      background: linear-gradient(135deg, var(--teal), var(--blue));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .hero-stat .label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
       color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
+
+    /* Product showcase - crossfade, no float */
+    .product-showcase {
+      position: relative;
+      height: 520px;
+    }
+
+    .product-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      background: rgba(10, 10, 12, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .product-card.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .product-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .card-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: rgba(239, 68, 68, 0.5); }
+    .dot-yellow { background: rgba(251, 191, 36, 0.5); }
+    .dot-green { background: rgba(34, 197, 94, 0.5); }
+
+    .card-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-teal {
+      background: rgba(38, 229, 164, 0.1);
+      color: var(--teal);
+      border: 1px solid rgba(38, 229, 164, 0.25);
+    }
+
+    .badge-blue {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    .badge-purple {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--purple);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+
+    .product-card h3 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .product-card .subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+    }
+
+    .product-card .visual {
+      height: 180px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-card .visual svg {
+      width: 90%;
+      height: 80%;
+    }
+
+    .product-card .info {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .product-card .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .product-card .info-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .product-card .info-value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .product-card .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .product-card .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    /* Card indicator dots */
+    .card-indicators {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .card-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .card-indicator.active { background: var(--teal); width: 24px; border-radius: 4px; }
+    .card-indicator[data-card="clinref"].active { background: var(--blue); }
+    .card-indicator[data-card="amore"].active { background: var(--purple); }
 
     /* SECTIONS */
-    section {
-      padding: 120px 0;
-    }
+    section { padding: 100px 0; }
 
     .section-header {
-      margin-bottom: 64px;
+      margin-bottom: 60px;
     }
 
-    .section-label {
+    .section-header.centered { text-align: center; max-width: 700px; margin-left: auto; margin-right: auto; }
+
+    .section-eyebrow {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 16px;
     }
 
     .section-title {
-      font-size: clamp(32px, 5vw, 48px);
+      font-size: clamp(32px, 4vw, 48px);
       font-weight: 800;
-      letter-spacing: -0.03em;
       line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
     }
 
-    /* PROJECTS */
-    #projects {
-      border-top: 1px solid var(--border);
+    .section-description {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.7;
     }
 
-    .projects-grid {
+    /* PRODUCTS SECTION */
+    #work { border-top: 1px solid var(--border); }
+
+    .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
 
-    .project-card {
+    .product-card-full {
       background: var(--surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 32px;
-      transition: all 0.3s ease;
+      overflow: hidden;
+      transition: all 0.3s;
       text-decoration: none;
       color: inherit;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
     }
 
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .project-card:hover {
+    .product-card-full:hover {
       transform: translateY(-4px);
-      border-color: var(--border-hover);
-      background: var(--surface-hover);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.15);
     }
 
-    .project-card:hover::before {
-      opacity: 1;
-    }
-
-    .project-card.teal::before { background: linear-gradient(90deg, var(--teal), transparent); }
-    .project-card.blue::before { background: linear-gradient(90deg, var(--blue), transparent); }
-    .project-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
-
-    .project-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+    .product-visual {
+      height: 220px;
+      background: #050507;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      margin-bottom: 24px;
+      padding: 24px;
+      position: relative;
     }
 
-    .project-icon.teal {
-      background: rgba(38, 229, 164, 0.1);
-      border: 1px solid rgba(38, 229, 164, 0.2);
+    .product-visual::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
     }
 
-    .project-icon.blue {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-    }
+    .product-card-full.teal .product-visual::before { background: var(--teal); }
+    .product-card-full.blue .product-visual::before { background: var(--blue); }
+    .product-card-full.purple .product-visual::before { background: var(--purple); }
 
-    .project-icon.purple {
-      background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.2);
-    }
+    .product-content { padding: 28px; }
 
-    .project-header {
+    .product-content-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 12px;
     }
 
-    .project-title {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
+    .product-title { font-size: 24px; font-weight: 800; }
 
-    .project-status {
+    .product-status {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      padding: 6px 12px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 5px 10px;
       border-radius: 100px;
     }
 
-    .status-live {
-      background: rgba(38, 229, 164, 0.1);
-      color: var(--teal);
-      border: 1px solid rgba(38, 229, 164, 0.25);
-    }
-
-    .status-beta {
-      background: rgba(139, 92, 246, 0.1);
-      color: var(--purple);
-      border: 1px solid rgba(139, 92, 246, 0.25);
-    }
-
-    .project-description {
-      font-size: 15px;
+    .product-description {
+      font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.7;
-      margin-bottom: 24px;
-      flex: 1;
+      margin-bottom: 20px;
     }
 
-    .project-tags {
+    .product-tags {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
+      flex-wrap: wrap;
       margin-bottom: 24px;
     }
 
-    .project-tag {
+    .product-tag {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      font-weight: 500;
       padding: 6px 12px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       border-radius: 6px;
-      color: var(--text-secondary);
     }
 
-    .project-link {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: gap 0.2s ease;
-    }
-
-    .project-card:hover .project-link {
+    .product-link {
+      display: flex;
       gap: 12px;
     }
 
-    /* BACKGROUND */
-    #background {
-      border-top: 1px solid var(--border);
-    }
-
-    .background-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .background-story p {
-      font-size: 18px;
-      color: var(--text-body);
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .background-story strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-2px);
-    }
-
-    .stat-number {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--teal), var(--blue));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .stat-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .stat-detail {
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    /* STACK */
-    #stack {
-      border-top: 1px solid var(--border);
-    }
-
-    .stack-categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 48px;
-    }
-
-    .stack-category h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .stack-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .stack-pill {
-      font-family: 'JetBrains Mono', monospace;
+    .product-link a {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
-      padding: 10px 18px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      color: var(--text);
-      transition: all 0.2s ease;
-    }
-
-    .stack-pill:hover {
-      background: var(--surface-hover);
-      border-color: var(--border-hover);
-    }
-
-    .stack-pill.highlight {
-      border-color: rgba(38, 229, 164, 0.3);
-      background: rgba(38, 229, 164, 0.08);
-    }
-
-    /* CONTACT */
-    #contact {
-      border-top: 1px solid var(--border);
-    }
-
-    .contact-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .contact-text p {
-      font-size: 18px;
-      color: var(--text-body);
-      line-height: 1.7;
-      margin-bottom: 32px;
-    }
-
-    .contact-ctas {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .contact-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
       text-decoration: none;
-      color: inherit;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 20px;
+      text-align: center;
+      transition: all 0.2s;
     }
 
-    .contact-card:hover {
-      border-color: var(--border-hover);
-      background: var(--surface-hover);
-      transform: translateX(4px);
+    .product-link .primary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
     }
 
-    .contact-card-icon {
-      width: 48px;
-      height: 48px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
+    .product-link .primary:hover {
+      background: rgba(255,255,255,0.08);
     }
 
-    .contact-card-text h4 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+    /* HOW WE WORK SECTION */
+    #services { border-top: 1px solid var(--border); }
 
-    .contact-card-text p {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin: 0;
-    }
-
-    /* SERVICES */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
+      margin-bottom: 60px;
     }
 
     .service-card {
@@ -767,37 +620,316 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 32px;
-      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
     }
 
     .service-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.12);
     }
 
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.1;
+    }
+
+    .service-card.teal { border-color: rgba(38,229,164,0.2); }
+    .service-card.teal::before { background: var(--teal); }
+    .service-card.blue { border-color: rgba(59,130,246,0.2); }
+    .service-card.blue::before { background: var(--blue); }
+    .service-card.purple { border-color: rgba(139,92,246,0.2); }
+    .service-card.purple::before { background: var(--purple); }
+
     .service-icon {
-      font-size: 32px;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
       margin-bottom: 20px;
     }
 
-    .service-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
+    .service-card.teal .service-icon { background: rgba(38,229,164,0.1); }
+    .service-card.blue .service-icon { background: rgba(59,130,246,0.1); }
+    .service-card.purple .service-icon { background: rgba(139,92,246,0.1); }
+
+    .service-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
 
     .service-description {
       font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .service-features {
+      margin-bottom: 24px;
+    }
+
+    .service-features-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .service-feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    .service-feature .check { font-size: 14px; }
+    .service-card.teal .service-feature .check { color: var(--teal); }
+    .service-card.blue .service-feature .check { color: var(--blue); }
+    .service-card.purple .service-feature .check { color: var(--purple); }
+
+    .service-pricing {
+      padding: 16px;
+      border-radius: 12px;
       margin-bottom: 20px;
     }
 
+    .service-card.teal .service-pricing { background: rgba(38,229,164,0.05); border: 1px solid rgba(38,229,164,0.15); }
+    .service-card.blue .service-pricing { background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.15); }
+    .service-card.purple .service-pricing { background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.15); }
+
     .service-price {
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .service-card.teal .service-price { color: var(--teal); }
+    .service-card.blue .service-price { color: var(--blue); }
+    .service-card.purple .service-price { color: var(--purple); }
+
+    .service-price-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .service-cta {
+      display: block;
+      padding: 14px;
+      border-radius: 10px;
+      text-decoration: none;
       font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .service-card.teal .service-cta {
+      background: linear-gradient(135deg, rgba(38,229,164,0.15), rgba(38,229,164,0.08));
+      border: 1px solid rgba(38,229,164,0.4);
+      color: var(--teal);
+    }
+
+    .service-card.blue .service-cta {
+      background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.08));
+      border: 1px solid rgba(59,130,246,0.4);
+      color: var(--blue);
+    }
+
+    .service-card.purple .service-cta {
+      background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(139,92,246,0.08));
+      border: 1px solid rgba(139,92,246,0.4);
+      color: var(--purple);
+    }
+
+    /* CTA Banner */
+    .cta-banner {
+      text-align: center;
+      padding: 48px;
+      background: linear-gradient(135deg, rgba(38,229,164,0.03), rgba(59,130,246,0.03));
+      border: 1px solid rgba(38,229,164,0.2);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple));
+    }
+
+    .cta-banner h3 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cta-banner p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-banner .btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner .response-note {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .cta-banner .response-note span {
       color: var(--teal);
       font-weight: 600;
+    }
+
+    /* CREDENTIALS SECTION */
+    #about { border-top: 1px solid var(--border); }
+
+    .credentials-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .credential-stat {
+      text-align: center;
+    }
+
+    .credential-number {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .credential-stat:nth-child(2) .credential-number {
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .credential-stat:nth-child(3) .credential-number {
+      background: linear-gradient(135deg, var(--purple), var(--teal));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .credential-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .credential-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      grid-auto-rows: minmax(180px, auto);
+    }
+
+    .bento-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+
+    .bento-item:hover {
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .bento-item-large { grid-column: span 2; }
+
+    .bento-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .bento-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .bento-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .tech-tag {
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .tech-tag:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
     }
 
     /* FOOTER */
@@ -813,7 +945,7 @@
     }
 
     footer p {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
     }
 
@@ -823,17 +955,15 @@
     }
 
     .footer-link {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-secondary);
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color 0.2s;
     }
 
-    .footer-link:hover {
-      color: var(--text);
-    }
+    .footer-link:hover { color: var(--text); }
 
-    /* Mobile menu button */
+    /* Mobile */
     .mobile-menu-btn {
       display: none;
       background: none;
@@ -841,113 +971,37 @@
       color: var(--text);
       font-size: 24px;
       cursor: pointer;
-      padding: 8px;
     }
 
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-in {
-      animation: fadeUp 0.6s ease-out forwards;
-    }
-
-    .delay-1 { animation-delay: 0.1s; opacity: 0; }
-    .delay-2 { animation-delay: 0.2s; opacity: 0; }
-    .delay-3 { animation-delay: 0.3s; opacity: 0; }
-    .delay-4 { animation-delay: 0.4s; opacity: 0; }
-
-    /* Scroll-triggered animations */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease-out;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .container {
-        padding: 0 24px;
-      }
+      .container { padding: 0 24px; }
 
-      section {
-        padding: 80px 0;
-      }
-
-      .background-content,
-      .contact-content {
+      .hero .container {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 60px;
       }
 
-      .services-grid {
+      .product-showcase { display: none; }
+
+      .products-grid,
+      .services-grid,
+      .bento-grid,
+      .credentials-stats {
         grid-template-columns: 1fr;
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .bento-item-large { grid-column: span 1; }
+
+      .tech-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
 
-      .mobile-menu-btn {
-        display: block;
-      }
+      .hero h1 { font-size: clamp(32px, 8vw, 48px); }
 
-      .hero {
-        padding: 120px 0 80px;
-      }
-
-      .hero h1 {
-        font-size: clamp(32px, 9vw, 48px);
-      }
-
-      .rotating-tagline-container {
-        height: 40px;
-        margin: 24px 0 32px;
-      }
-
-      .rotating-tagline {
-        font-size: 15px;
-      }
-
-      .hero-subtitle {
-        font-size: 16px;
-      }
-
-      .hero-stats {
-        flex-direction: column;
-        gap: 24px;
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat-number {
-        font-size: 40px;
-      }
+      .hero-stats { flex-direction: column; gap: 24px; }
 
       footer .container {
         flex-direction: column;
@@ -955,85 +1009,80 @@
         text-align: center;
       }
 
-      .footer-links {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    /* Subtle entrance animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
   <div class="ambient">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
   </div>
 
   <div class="content">
     <nav id="nav">
       <div class="container">
         <a href="#" class="logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 1024 890" fill="none">
-              <path d="M 543.65 524.83 C 539.76 525.89 537.51 531.00 535.40 534.86 C 533.41 538.49 528.50 542.38 523.96 545.42 C 511.64 553.67 494.26 556.43 480.89 548.86 Q 471.55 543.57 466.05 538.93 C 461.72 535.27 460.42 529.58 456.67 525.63 C 454.48 523.32 451.06 524.27 449.60 526.66 C 444.95 534.29 439.56 544.29 434.05 552.52 Q 430.42 557.94 426.93 564.21 C 419.68 577.28 416.66 581.78 410.30 592.74 C 403.39 604.64 392.78 619.37 384.31 633.03 Q 365.99 662.54 347.72 688.73 Q 346.06 691.10 342.13 698.62 C 336.61 709.19 314.98 707.76 304.69 707.73 C 293.92 707.70 283.83 706.25 274.90 704.59 Q 270.94 703.86 261.60 700.05 Q 255.62 697.61 250.38 693.92 C 246.11 690.90 241.11 688.40 235.87 684.70 Q 220.26 673.67 208.91 658.67 C 205.59 654.29 203.23 649.16 200.21 645.36 C 191.77 634.72 189.28 624.56 185.63 610.72 Q 184.27 605.54 184.03 598.70 Q 184.02 598.67 183.34 586.26 Q 181.95 561.12 191.69 538.47 C 193.83 533.48 195.98 530.02 199.95 525.17 C 204.75 519.32 207.82 513.19 210.63 506.95 Q 211.83 504.30 215.66 498.71 Q 224.90 485.21 227.52 481.54 C 232.97 473.92 236.50 466.48 242.23 458.00 Q 247.21 450.62 248.67 447.87 C 252.83 440.05 257.98 433.75 263.81 425.01 C 267.53 419.42 270.37 412.63 273.74 407.54 Q 278.20 400.80 283.52 392.64 Q 286.95 387.38 293.05 379.79 Q 298.47 373.05 304.02 364.53 Q 318.81 341.80 326.47 328.63 C 329.30 323.75 332.15 317.02 335.19 312.69 C 342.27 302.63 346.59 296.72 352.08 287.70 Q 362.75 270.16 368.18 262.38 Q 373.06 255.39 376.60 249.01 Q 381.77 239.71 385.22 235.78 Q 386.20 234.67 393.33 223.86 Q 399.14 215.04 406.95 207.45 Q 408.57 205.88 417.50 198.16 C 426.54 190.36 435.26 185.10 446.28 179.72 Q 456.73 174.61 466.83 172.20 Q 479.50 169.19 488.51 168.80 Q 503.94 168.14 510.64 168.93 Q 515.82 169.54 526.67 171.37 C 531.08 172.12 537.33 174.09 542.12 176.16 Q 558.30 183.17 574.07 193.36 C 583.13 199.22 589.74 205.58 596.60 213.69 Q 599.84 217.53 605.35 227.21 Q 610.51 236.29 616.86 243.90 Q 619.04 246.51 624.44 255.57 Q 630.67 266.00 645.38 287.83 C 650.30 295.12 654.40 302.63 658.76 308.75 Q 666.50 319.59 673.52 331.48 Q 677.29 337.86 682.72 345.82 Q 694.03 362.40 694.05 362.43 C 704.87 379.17 717.78 397.93 726.65 413.52 Q 731.97 422.87 737.40 430.69 Q 743.27 439.15 752.89 456.28 C 756.05 461.89 762.20 467.48 766.31 473.69 C 770.72 480.35 776.49 487.37 780.40 493.92 C 783.80 499.60 786.90 503.76 789.96 509.20 Q 792.38 513.50 800.98 528.26 Q 806.57 537.85 811.45 553.43 C 812.61 557.12 812.09 560.61 813.29 564.51 Q 813.85 566.33 814.00 568.53 Q 814.73 580.02 813.89 593.13 Q 813.64 596.98 812.50 601.39 A 9.63 8.85 -38.2 0 0 812.25 602.92 C 811.98 606.70 811.97 611.26 810.49 616.51 Q 808.41 623.89 805.01 632.02 Q 801.75 639.82 792.50 655.41 C 790.21 659.28 787.28 661.85 784.56 665.44 Q 783.46 666.89 781.06 669.18 Q 775.15 674.82 765.71 682.58 C 762.18 685.47 757.00 687.67 753.80 689.81 C 747.88 693.78 742.03 698.09 735.26 700.51 C 725.55 704.00 715.86 706.95 705.76 707.51 Q 704.62 707.58 681.20 707.63 C 675.00 707.65 668.87 706.43 663.66 705.36 C 660.82 704.78 657.69 701.61 656.16 698.27 Q 653.26 691.96 649.55 687.08 Q 645.73 682.07 643.25 677.80 Q 639.06 670.56 631.75 661.07 C 629.90 658.66 628.01 654.74 625.85 651.55 Q 620.38 643.49 610.10 628.41 C 605.08 621.06 598.66 609.87 592.60 601.16 Q 586.33 592.17 582.51 585.26 Q 577.12 575.51 572.86 569.00 Q 570.52 565.41 554.47 539.65 Q 552.40 536.33 551.52 534.45 C 549.48 530.07 548.31 525.98 544.74 524.85 A 1.95 1.92 -43.6 0 0 543.65 524.83" fill="none" stroke="#26e5a4" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M 639.51 332.25 C 639.71 336.73 634.43 341.10 632.05 344.60 C 622.46 358.70 610.87 373.42 600.82 388.05 Q 588.25 406.34 588.21 406.36 Q 587.50 406.89 580.45 418.22 Q 575.83 425.65 570.36 431.50 C 568.80 433.17 567.29 435.47 565.97 437.45 Q 559.49 447.14 551.16 458.77 C 540.19 474.08 531.28 491.71 516.90 504.13 Q 514.57 506.14 508.04 509.29 Q 500.95 512.69 493.74 510.75 C 482.05 507.60 473.38 498.39 466.31 488.55 Q 454.21 471.70 453.48 470.72 Q 449.11 464.86 445.55 458.90 C 442.52 453.83 438.19 449.25 434.35 443.56 C 424.82 429.47 417.18 416.99 408.15 404.79 Q 401.32 395.57 395.61 386.71 Q 390.53 378.84 380.85 365.54 C 372.03 353.41 367.31 346.86 359.91 338.95 C 356.42 335.23 358.53 330.43 360.98 326.21 C 363.96 321.06 368.79 315.08 371.99 309.61 Q 379.70 296.47 389.17 282.80 C 397.25 271.15 403.36 261.20 411.73 248.14 C 416.89 240.10 421.01 234.86 427.57 226.07 C 432.08 220.03 438.86 215.56 446.14 211.14 C 454.02 206.36 463.74 201.31 472.74 200.07 C 476.90 199.50 479.60 198.60 483.80 198.33 Q 487.30 198.11 494.01 196.90 Q 500.08 195.82 511.19 197.89 A 8.05 8.04 -14.5 0 0 512.32 198.03 Q 520.90 198.58 524.59 199.65 Q 535.19 202.72 544.87 208.12 C 549.04 210.45 552.76 213.34 557.05 216.20 C 560.48 218.48 563.65 221.40 566.52 224.82 C 570.29 229.31 571.80 231.33 575.05 234.73 Q 578.35 238.19 579.00 239.27 Q 585.23 249.65 589.16 255.85 C 590.91 258.60 593.23 261.30 594.99 264.15 C 603.13 277.34 614.14 291.76 623.66 306.61 Q 631.38 318.64 637.50 327.48 Q 638.10 328.34 638.68 329.80 Q 639.49 331.84 639.51 332.25" fill="none" stroke="#26e5a4" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M 343.02 363.29 A 2.14 2.08 -15.8 0 1 344.11 363.88 C 347.19 367.05 349.80 373.10 351.49 376.32 Q 352.65 378.53 355.45 381.98 Q 364.14 392.71 370.37 402.13 C 377.61 413.07 382.17 420.16 388.32 427.38 Q 392.24 431.98 393.58 433.93 Q 403.77 448.66 409.63 456.57 C 412.12 459.93 413.50 463.37 416.00 466.62 C 422.04 474.47 426.81 483.01 433.06 490.71 C 437.07 495.64 431.61 501.30 429.27 505.72 Q 422.44 518.59 419.86 522.85 Q 397.62 559.57 391.97 568.72 C 387.84 575.42 381.61 581.99 378.20 587.96 Q 363.98 612.86 347.60 638.87 Q 335.51 658.08 324.69 672.95 Q 322.87 675.45 318.82 677.56 A 2.33 2.28 -57.7 0 1 317.72 677.82 C 314.04 677.77 308.19 679.64 303.11 679.30 C 289.91 678.42 277.79 676.61 266.72 670.83 Q 258.47 666.52 249.27 660.52 C 246.89 658.97 243.47 655.54 240.60 652.19 C 226.79 636.09 214.95 617.01 214.08 595.24 Q 213.92 591.02 213.19 584.25 A 17.96 17.40 45.7 0 1 213.18 580.74 Q 214.45 568.31 214.78 566.26 C 217.47 549.98 224.51 539.32 234.59 524.07 C 238.72 517.82 241.50 513.05 245.34 506.16 C 248.70 500.12 252.32 495.65 256.10 489.44 Q 264.62 475.43 268.88 468.97 C 275.70 458.63 283.49 445.42 290.31 436.06 A 9.40 8.78 -6.2 0 1 291.19 435.04 Q 295.58 430.69 298.64 425.64 C 305.57 414.19 309.80 406.66 316.88 396.42 Q 327.29 381.38 335.27 367.88 C 337.19 364.64 339.11 362.49 343.02 363.29" fill="none" stroke="#26e5a4" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M 656.56 363.76 L 658.41 365.01 A 3.09 3.05 -0.4 0 1 659.22 365.80 C 661.65 369.21 663.46 372.29 666.64 375.71 Q 672.55 382.05 677.17 389.43 C 682.75 398.34 690.20 408.70 695.92 419.11 Q 700.20 426.93 706.16 435.09 Q 708.07 437.69 715.93 450.85 C 721.76 460.63 728.32 469.48 733.46 478.46 C 735.18 481.47 737.58 483.62 739.39 486.98 Q 742.43 492.60 746.03 497.49 C 750.62 503.71 754.42 512.38 758.98 518.07 Q 763.42 523.61 764.28 524.94 Q 766.39 528.25 769.39 531.98 Q 776.12 540.33 781.19 552.08 C 782.50 555.12 784.00 562.00 784.16 566.67 Q 784.32 571.59 785.45 579.09 C 786.72 587.47 783.84 594.16 784.06 601.52 A 6.79 1.00 89.4 0 1 784.07 602.48 Q 784.06 602.66 781.98 611.49 Q 779.44 622.25 774.29 630.34 C 768.22 639.90 760.64 647.84 753.25 655.24 C 747.55 660.95 740.71 664.54 729.68 670.68 Q 720.91 675.56 710.84 677.77 A 7.72 7.38 -50.7 0 1 709.45 677.94 Q 703.78 678.10 701.74 678.44 C 695.87 679.42 689.97 678.64 684.47 678.09 Q 680.20 677.66 677.26 673.97 C 674.67 670.71 672.21 666.77 669.06 663.15 Q 660.87 653.74 659.11 650.85 Q 649.28 634.82 638.10 618.81 C 633.20 611.79 629.79 605.21 624.86 597.71 Q 618.54 588.11 615.77 583.35 C 607.11 568.52 596.01 552.29 586.84 536.26 Q 579.39 523.25 577.37 520.38 Q 569.55 509.27 563.53 499.46 C 561.07 495.47 563.03 492.46 565.32 489.06 Q 570.05 482.05 575.09 476.38 Q 577.93 473.19 584.34 463.54 Q 592.24 451.63 593.13 450.38 C 603.47 435.78 609.83 427.36 617.46 414.42 C 620.53 409.19 625.01 403.37 627.61 400.35 Q 630.21 397.31 634.55 390.91 C 640.22 382.52 646.69 374.11 651.97 366.48 Q 653.33 364.51 655.55 363.65 A 1.10 1.08 -38.1 0 1 656.56 363.76" fill="none" stroke="#26e5a4" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+          <div class="logo-icon">MF</div>
           <span class="logo-text">Matt Ross</span>
         </a>
-        
         <div class="nav-links">
-          <a href="#projects" class="nav-link">Projects</a>
-          <a href="#background" class="nav-link">Background</a>
-          <a href="#stack" class="nav-link">Stack</a>
-          <a href="#contact" class="nav-link">Contact</a>
-          <a href="mailto:mrossoma@gmail.com" class="nav-cta">Hire Me</a>
+          <a href="#work" class="nav-link">Work</a>
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="mailto:mrossoma@gmail.com" class="nav-cta">Contact</a>
         </div>
-
-        <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+        <button class="mobile-menu-btn">☰</button>
       </div>
     </nav>
 
     <section class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1 class="animate-in">
-            <span class="line"><span class="healthcare">Healthcare</span> doesn't need</span>
-            <span class="line line-2">another <span class="problem">problem.</span></span>
-            <span class="line line-3">It needs a <span class="mf">MF</span> <span class="solution">Solution.</span></span>
+          <h1>
+            <span class="healthcare">Healthcare</span> doesn't need another <span class="problem">problem.</span><br>
+            It needs a <span class="mf-solution">MF <em>Solution.</em></span>
           </h1>
-          
-          <div class="rotating-tagline-container animate-in delay-1">
-            <p class="rotating-tagline">From running codes to writing code.</p>
-            <p class="rotating-tagline">From fractures to refactors.</p>
-            <p class="rotating-tagline">From AKIs to APIs.</p>
-            <p class="rotating-tagline">From admissions to permissions.</p>
-            <p class="rotating-tagline">From SOAP to CRUD.</p>
-            <p class="rotating-tagline">I learned some systems. Then I learned some more.</p>
-            <p class="rotating-tagline">The system is broken. I'm putting the heart back in healthcare.</p>
-            <p class="rotating-tagline">Medicine deserves its heart back — I'm here to return it.</p>
-            <p class="rotating-tagline">Integrating systems with systems.</p>
-            <p class="rotating-tagline">I learned their systems. Then I built my own.</p>
-            <p class="rotating-tagline">I didn't switch EMRs. I built one.</p>
-            <p class="rotating-tagline">If you can't beat the system… rewrite it.</p>
+
+          <div class="tagline-container">
+            <p class="tagline active">Licensed clinician. Production engineer.</p>
+            <p class="tagline">I've written prescriptions—and the code that manages them.</p>
+            <p class="tagline">Five years in the exam room. Three years in production.</p>
+            <p class="tagline">Clinical expertise meets technical execution.</p>
+            <p class="tagline">Built by someone who's done both.</p>
           </div>
-          
-          <p class="hero-subtitle animate-in delay-2">
+
+          <p class="hero-subtitle">
             I bridge the gap between <strong>Clinical Protocols</strong> and <strong>Production Code</strong>. 
             Five years prescribing hormones. Three years shipping software. Zero tolerance for clunky healthcare UX.
           </p>
 
-          <div class="hero-ctas animate-in delay-3">
-            <a href="#projects" class="btn btn-primary">View Work →</a>
+          <div class="hero-ctas">
+            <a href="#work" class="btn btn-primary">View Work →</a>
             <a href="mailto:mrossoma@gmail.com" class="btn btn-secondary">Get in Touch</a>
           </div>
 
-          <div class="hero-stats animate-in delay-4">
+          <div class="hero-stats">
             <div class="hero-stat">
               <div class="number">3+</div>
               <div class="label">Shipped Products</div>
+            </div>
+            <div class="hero-stat">
+              <div class="number">10K+</div>
+              <div class="label">Patient Encounters</div>
             </div>
             <div class="hero-stat">
               <div class="number">100%</div>
@@ -1041,251 +1090,446 @@
             </div>
           </div>
         </div>
+
+        <div class="product-showcase">
+          <!-- Protocol Card -->
+          <div class="product-card active" data-product="protocol">
+            <div class="product-card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge badge-teal">LIVE</div>
+            </div>
+            <h3>Protocol</h3>
+            <p class="subtitle">Biomarker Tracking</p>
+            <div class="visual">
+              <svg viewBox="0 0 200 80">
+                <defs>
+                  <linearGradient id="tealGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#26e5a4;stop-opacity:0.4" />
+                    <stop offset="100%" style="stop-color:#26e5a4;stop-opacity:0" />
+                  </linearGradient>
+                </defs>
+                <path d="M0,60 L25,55 L50,45 L75,50 L100,40 L125,48 L150,42 L175,45 L200,40" fill="none" stroke="#26e5a4" stroke-width="2"/>
+                <path d="M0,60 L25,55 L50,45 L75,50 L100,40 L125,48 L150,42 L175,45 L200,40 V80 H0 Z" fill="url(#tealGrad)"/>
+                <circle cx="100" cy="40" r="4" fill="#26e5a4"/>
+              </svg>
+            </div>
+            <div class="info">
+              <div class="info-row">
+                <span class="info-label">Next Lab Draw</span>
+                <span class="info-value" style="color: var(--teal);">Dec 22</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 65%; background: linear-gradient(90deg, var(--teal), #5de4ff);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MF-ClinRef Card -->
+          <div class="product-card" data-product="clinref">
+            <div class="product-card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge badge-blue">LIVE</div>
+            </div>
+            <h3>MF-ClinRef</h3>
+            <p class="subtitle">PK Modeling</p>
+            <div class="visual">
+              <svg viewBox="0 0 200 80">
+                <defs>
+                  <linearGradient id="blueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.4" />
+                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                  </linearGradient>
+                </defs>
+                <path d="M0,70 Q20,20 40,30 Q60,40 80,25 Q100,10 120,30 Q140,50 160,25 Q180,5 200,30" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                <path d="M0,70 Q20,20 40,30 Q60,40 80,25 Q100,10 120,30 Q140,50 160,25 Q180,5 200,30 V80 H0 Z" fill="url(#blueGrad)"/>
+                <circle cx="80" cy="25" r="4" fill="#3b82f6"/>
+              </svg>
+            </div>
+            <div class="info">
+              <div class="info-row">
+                <span class="info-label">Protocols Loaded</span>
+                <span class="info-value" style="color: var(--blue);">20+</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, var(--blue), #60a5fa);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amore Card -->
+          <div class="product-card" data-product="amore">
+            <div class="product-card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge badge-purple">BETA</div>
+            </div>
+            <h3>Amore</h3>
+            <p class="subtitle">AI Documentation</p>
+            <div class="visual" style="flex-direction: column; gap: 8px; padding: 16px;">
+              <div style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; color: var(--text-secondary);">45M c/o fatigue, low libido...</div>
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text-muted);">
+                <div style="width: 6px; height: 6px; background: var(--purple); border-radius: 50%;"></div>
+                Generating SOAP note...
+              </div>
+              <div style="width: 100%; padding: 10px 12px; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius: 6px; font-size: 10px; color: #ccc;">
+                <strong style="color: var(--purple);">S:</strong> 45-year-old male presenting...
+              </div>
+            </div>
+            <div class="info">
+              <div class="info-row">
+                <span class="info-label">Notes Generated</span>
+                <span class="info-value" style="color: var(--purple);">500+</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%; background: linear-gradient(90deg, var(--purple), #a78bfa);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-indicators">
+            <div class="card-indicator active" data-card="protocol"></div>
+            <div class="card-indicator" data-card="clinref"></div>
+            <div class="card-indicator" data-card="amore"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="projects">
+    <section id="work">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-label">Projects</p>
+        <div class="section-header">
+          <p class="section-eyebrow">Products</p>
           <h2 class="section-title">Built for Real Clinical Workflows</h2>
+          <p class="section-description">Production-ready tools you can use today.</p>
         </div>
 
-        <div class="projects-grid">
-          <a href="https://protocol.multifactorsolutions.net/" target="_blank" class="project-card teal reveal">
-            <div class="project-icon teal">📊</div>
-            <div class="project-header">
-              <h3 class="project-title">Protocol</h3>
-              <span class="project-status status-live">LIVE</span>
+        <div class="products-grid">
+          <a href="https://protocol.multifactorsolutions.net/" target="_blank" class="product-card-full teal">
+            <div class="product-visual">
+              <!-- Protocol UI Mockup - Clean, no emojis -->
+              <div style="width: 90%; height: 90%; background: rgba(5,5,7,0.95); border: 1px solid rgba(38,229,164,0.2); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26e5a4" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4"/></svg>
+                  <div style="font-size: 9px; color: #999; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">BIOMARKER TRACKING</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 11px;">
+                  <div style="padding: 7px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px;">
+                    <div style="font-size: 7px; color: #666; margin-bottom: 3px;">LAB DATE</div>
+                    <div style="font-size: 10px; color: #e5e5e5; font-weight: 600;">12/22/2025</div>
+                  </div>
+                  <div style="padding: 7px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px;">
+                    <div style="font-size: 7px; color: #666; margin-bottom: 3px;">LAB TIME</div>
+                    <div style="font-size: 10px; color: #e5e5e5; font-weight: 600;">08:00 AM</div>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 11px;">
+                  <div style="display: flex; align-items: center; gap: 6px; padding: 5px 7px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 5px;">
+                    <div style="width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;"></div>
+                    <div style="font-size: 8px; color: #fbbf24; font-weight: 600;">Hydration (7d)</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; padding: 5px 7px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18); border-radius: 5px;">
+                    <div style="width: 6px; height: 6px; background: #ef4444; border-radius: 50%;"></div>
+                    <div style="font-size: 8px; color: #ef4444; font-weight: 600;">48h Dose Alert</div>
+                  </div>
+                </div>
+                <div style="flex: 1; min-height: 50px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 7px; position: relative;">
+                  <svg viewBox="0 0 200 50" style="width: 100%; height: 100%;">
+                    <defs>
+                      <linearGradient id="protocolGradProduct" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#26e5a4;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#26e5a4;stop-opacity:0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,40 L25,35 L50,28 L75,32 L100,25 L125,30 L150,26 L175,28 L200,24" fill="none" stroke="#26e5a4" stroke-width="2"/>
+                    <path d="M0,40 L25,35 L50,28 L75,32 L100,25 L125,30 L150,26 L175,28 L200,24 V50 H0 Z" fill="url(#protocolGradProduct)"/>
+                    <circle cx="100" cy="25" r="3" fill="#26e5a4"/>
+                  </svg>
+                  <div style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; background: rgba(38,229,164,0.15); border: 1px solid rgba(38,229,164,0.3); border-radius: 3px; font-size: 6px; color: #26e5a4; font-family: 'JetBrains Mono', monospace; font-weight: 700;">DPD</div>
+                </div>
+              </div>
             </div>
-            <p class="project-description">
-              Lab timing intelligence with DPD normalization. Track biomarkers by cycle context, not calendar dates. 
-              Automated prep reminders, dosing alerts, and privacy-first offline tracking.
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">PWA</span>
-              <span class="project-tag">DPD Intelligence</span>
-              <span class="project-tag">Offline-First</span>
+            <div class="product-content">
+              <div class="product-content-header">
+                <h3 class="product-title">Protocol</h3>
+                <span class="product-status badge-teal">LIVE</span>
+              </div>
+              <p class="product-description">Lab timing intelligence with DPD normalization. Track biomarkers by cycle context. Privacy-first offline tracking.</p>
+              <div class="product-tags">
+                <span class="product-tag">PWA</span>
+                <span class="product-tag">DPD Intelligence</span>
+                <span class="product-tag">Offline-First</span>
+              </div>
+              <div class="product-link">
+                <span class="primary">Try It Free →</span>
+              </div>
             </div>
-            <span class="project-link">Try It Free →</span>
           </a>
 
-          <a href="https://multifitmatt.github.io/MF-ClinRef/" target="_blank" class="project-card blue reveal">
-            <div class="project-icon blue">🧬</div>
-            <div class="project-header">
-              <h3 class="project-title">MF-ClinRef</h3>
-              <span class="project-status status-live">LIVE</span>
+          <a href="https://multifitmatt.github.io/MF-ClinRef/" target="_blank" class="product-card-full blue">
+            <div class="product-visual">
+              <!-- MF-ClinRef UI Mockup -->
+              <div style="width: 90%; height: 90%; background: rgba(5,5,7,0.95); border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="display: flex; gap: 5px; margin-bottom: 12px; padding-bottom: 9px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                  <div style="padding: 4px 9px; background: rgba(59,130,246,0.22); border: 1px solid rgba(59,130,246,0.45); border-radius: 4px; font-size: 8px; color: #3b82f6; font-weight: 700;">CYPIONATE</div>
+                  <div style="padding: 4px 9px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 8px; color: #555; font-weight: 700;">PROPION</div>
+                  <div style="padding: 4px 9px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 8px; color: #555; font-weight: 700;">PELLETS</div>
+                </div>
+                <div style="flex: 1; min-height: 70px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 7px; margin-bottom: 11px; position: relative;">
+                  <svg viewBox="0 0 200 60" style="width: 100%; height: 100%;">
+                    <defs>
+                      <linearGradient id="pkGradProduct" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.35" />
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,50 Q10,15 20,20 Q30,25 40,15 Q50,10 60,20 Q70,30 80,15 Q90,5 100,20 Q110,35 120,15 Q130,5 140,20 Q150,35 160,15 Q170,5 180,20 Q190,35 200,20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                    <path d="M0,50 Q10,15 20,20 Q30,25 40,15 Q50,10 60,20 Q70,30 80,15 Q90,5 100,20 Q110,35 120,15 Q130,5 140,20 Q150,35 160,15 Q170,5 180,20 Q190,35 200,20 V60 H0 Z" fill="url(#pkGradProduct)"/>
+                    <circle cx="60" cy="20" r="3" fill="#3b82f6"/>
+                  </svg>
+                  <div style="position: absolute; top: 5px; right: 5px; font-size: 6px; color: #666; font-family: 'JetBrains Mono', monospace;">LIVE MODEL</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;">
+                  <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center;">
+                    <div style="font-size: 6px; color: #666; margin-bottom: 2px;">PEAK</div>
+                    <div style="font-size: 10px; color: #3b82f6; font-weight: 700;">1015</div>
+                  </div>
+                  <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center;">
+                    <div style="font-size: 6px; color: #666; margin-bottom: 2px;">TROUGH</div>
+                    <div style="font-size: 10px; color: #3b82f6; font-weight: 700;">876</div>
+                  </div>
+                  <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center;">
+                    <div style="font-size: 6px; color: #666; margin-bottom: 2px;">VAR</div>
+                    <div style="font-size: 10px; color: #3b82f6; font-weight: 700;">14%</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="project-description">
-              Interactive pharmacokinetic modeling for TRT optimization. Visualize steady-state overlaps, 
-              customize protocols, and simulate patient-specific dosing strategies in real-time.
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">PK Modeling</span>
-              <span class="project-tag">D3.js</span>
-              <span class="project-tag">Live Simulation</span>
+            <div class="product-content">
+              <div class="product-content-header">
+                <h3 class="product-title">MF-ClinRef</h3>
+                <span class="product-status badge-blue">LIVE</span>
+              </div>
+              <p class="product-description">Interactive pharmacokinetic modeling for TRT optimization. Visualize steady-state overlaps in real-time.</p>
+              <div class="product-tags">
+                <span class="product-tag">PK Modeling</span>
+                <span class="product-tag">D3.js</span>
+                <span class="product-tag">Live Simulation</span>
+              </div>
+              <div class="product-link">
+                <span class="primary">View Demo →</span>
+              </div>
             </div>
-            <span class="project-link">View Demo →</span>
           </a>
 
-          <a href="https://amore-ee94f.web.app/" target="_blank" class="project-card purple reveal">
-            <div class="project-icon purple">🤖</div>
-            <div class="project-header">
-              <h3 class="project-title">Amore</h3>
-              <span class="project-status status-beta">BETA</span>
+          <a href="https://amore-ee94f.web.app/" target="_blank" class="product-card-full purple">
+            <div class="product-visual">
+              <!-- Amore AI Chat Mockup - Clean, no emojis -->
+              <div style="width: 90%; height: 90%; background: rgba(10,10,12,0.9); border: 1px solid rgba(139,92,246,0.2); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden;">
+                <div style="display: flex; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                  <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(239,68,68,0.5);"></div>
+                  <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.5);"></div>
+                  <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(34,197,94,0.5);"></div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <div style="width: 20px; height: 20px; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+                  </div>
+                  <div style="flex: 1; padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+                    <div style="font-size: 9px; color: #999; line-height: 1.4;">45M fatigue, low libido x 3mo, AM TT 280...</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <div style="width: 20px; height: 20px; background: rgba(139,92,246,0.25); border: 1px solid rgba(139,92,246,0.4); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  </div>
+                  <div style="flex: 1; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius: 8px; padding: 10px;">
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                      <div style="width: 6px; height: 6px; background: #8b5cf6; border-radius: 50%;"></div>
+                      <div style="font-size: 8px; color: #666; font-family: 'JetBrains Mono', monospace;">SOAP NOTE</div>
+                    </div>
+                    <div style="font-size: 8px; color: #ccc; line-height: 1.5;">
+                      <span style="color: #8b5cf6; font-weight: 600;">S:</span> 45yo male c/o fatigue...<br>
+                      <span style="color: #8b5cf6; font-weight: 600;">O:</span> Labs: TT 280 ng/dL...<br>
+                      <span style="color: #8b5cf6; font-weight: 600;">A:</span> Hypogonadism, secondary
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="project-description">
-              AI clinical documentation that understands medical shorthand. Generate SOAP notes and HPI narratives 
-              in seconds. Built for practitioners who know what they want to say.
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">Claude API</span>
-              <span class="project-tag">SOAP Notes</span>
-              <span class="project-tag">Medical Templates</span>
+            <div class="product-content">
+              <div class="product-content-header">
+                <h3 class="product-title">Amore</h3>
+                <span class="product-status badge-purple">BETA</span>
+              </div>
+              <p class="product-description">AI clinical documentation that understands medical shorthand. Generate SOAP notes in seconds.</p>
+              <div class="product-tags">
+                <span class="product-tag">Claude API</span>
+                <span class="product-tag">SOAP Notes</span>
+                <span class="product-tag">Medical Templates</span>
+              </div>
+              <div class="product-link">
+                <span class="primary">Request Access →</span>
+              </div>
             </div>
-            <span class="project-link">Request Access →</span>
           </a>
         </div>
       </div>
     </section>
 
-    <section id="background">
+    <section id="services">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-label">Background</p>
-          <h2 class="section-title">From Prescribing to Programming</h2>
+        <div class="section-header centered">
+          <p class="section-eyebrow">How We Can Work Together</p>
+          <h2 class="section-title">Three Ways to Get Clinical Software</h2>
+          <p class="section-description">Whether you need custom development, want to license existing tools, or need enterprise setup—I've got you covered.</p>
         </div>
 
-        <div class="background-content">
-          <div class="background-story reveal">
-            <p>
-              <strong>I spent five years as a hormone optimization clinician</strong>—prescribing TRT, 
-              managing complex protocols, and documenting 10,000+ patient encounters in clunky EMR systems.
-            </p>
-            <p>
-              I watched colleagues waste hours on paperwork. I saw pharmacokinetics reduced to guesswork. 
-              I experienced firsthand how <strong>broken clinical software</strong> destroys the patient-provider relationship.
-            </p>
-            <p>
-              So I learned to build. Three years later, I've shipped production apps that run real clinical workflows. 
-              Apps that understand <strong>Days Post-Dose</strong>, not just calendar dates. 
-              AI that speaks medical shorthand. Simulators that visualize what used to be theoretical.
-            </p>
-            <p>
-              <strong>I'm not a developer who learned healthcare.</strong> I'm a clinician who learned to code—because the system needed someone who understood both.
-            </p>
+        <div class="services-grid">
+          <div class="service-card teal">
+            <div class="service-icon">💻</div>
+            <h3 class="service-title">Custom Development</h3>
+            <p class="service-description">Hire me to build your clinical app from scratch. Full-stack development with someone who understands both code and clinical workflows.</p>
+            <div class="service-features">
+              <div class="service-features-label">What you get:</div>
+              <div class="service-feature"><span class="check">✓</span> Custom clinical PWAs</div>
+              <div class="service-feature"><span class="check">✓</span> Medical calculators & tools</div>
+              <div class="service-feature"><span class="check">✓</span> HIPAA-compliant systems</div>
+              <div class="service-feature"><span class="check">✓</span> Direct communication (no PMs)</div>
+            </div>
+            <div class="service-pricing">
+              <div class="service-price">$5k–$25k</div>
+              <div class="service-price-note">Per project · 2–12 weeks</div>
+            </div>
+            <a href="mailto:mrossoma@gmail.com?subject=Custom Development" class="service-cta">Discuss Your Project →</a>
           </div>
 
-          <div class="stats-grid">
-            <div class="stat-card reveal">
-              <div class="stat-number">10K+</div>
-              <div class="stat-label">Patient Encounters</div>
-              <div class="stat-detail">Telehealth prescribing, 2019–2024</div>
+          <div class="service-card blue">
+            <div class="service-icon">📦</div>
+            <h3 class="service-title">Product Licensing</h3>
+            <p class="service-description">White-label my existing clinical tools for your practice. Get production-ready software deployed in days, not months.</p>
+            <div class="service-features">
+              <div class="service-features-label">Available products:</div>
+              <div class="service-feature"><span class="check">✓</span> MF-ClinRef (PK Modeling)</div>
+              <div class="service-feature"><span class="check">✓</span> Amore AI (SOAP Generator)</div>
+              <div class="service-feature"><span class="check">✓</span> Custom branding included</div>
+              <div class="service-feature"><span class="check">✓</span> Self-hosted or cloud options</div>
             </div>
-            <div class="stat-card reveal">
-              <div class="stat-number">3</div>
-              <div class="stat-label">Production Apps</div>
-              <div class="stat-detail">Live users, real PHI, HIPAA-compliant</div>
+            <div class="service-pricing">
+              <div class="service-price">Custom</div>
+              <div class="service-price-note">One-time + monthly options</div>
             </div>
-            <div class="stat-card reveal">
-              <div class="stat-number">0</div>
-              <div class="stat-label">Security Incidents</div>
-              <div class="stat-detail">Local-first architecture, zero PHI leaks</div>
+            <a href="mailto:mrossoma@gmail.com?subject=Product Licensing" class="service-cta">Explore Licensing →</a>
+          </div>
+
+          <div class="service-card purple">
+            <div class="service-icon">🏢</div>
+            <h3 class="service-title">Enterprise Setup</h3>
+            <p class="service-description">Custom Amore deployment for your clinic. Your medications, your templates, your workflow—all pre-configured.</p>
+            <div class="service-features">
+              <div class="service-features-label">What's included:</div>
+              <div class="service-feature"><span class="check">✓</span> Custom med formulary setup</div>
+              <div class="service-feature"><span class="check">✓</span> Your SOAP templates</div>
+              <div class="service-feature"><span class="check">✓</span> Multi-provider support</div>
+              <div class="service-feature"><span class="check">✓</span> Onboarding & training</div>
             </div>
-            <div class="stat-card reveal">
-              <div class="stat-number">100%</div>
-              <div class="stat-label">HIPAA Compliant</div>
-              <div class="stat-detail">By design, not by checkbox</div>
+            <div class="service-pricing">
+              <div class="service-price">$3k–$10k</div>
+              <div class="service-price-note">Setup + monthly licensing</div>
             </div>
+            <a href="mailto:mrossoma@gmail.com?subject=Enterprise Setup" class="service-cta">Get Amore for Your Clinic →</a>
+          </div>
+        </div>
+
+        <div class="cta-banner">
+          <h3>Not Sure Which Option Fits?</h3>
+          <p>Let's talk about your needs. I'll help you figure out whether custom development, licensing, or enterprise setup makes the most sense.</p>
+          <div class="btns">
+            <a href="mailto:mrossoma@gmail.com" class="btn btn-primary">Email Me →</a>
+            <a href="https://calendly.com/mrossoma" target="_blank" class="btn btn-secondary">📅 Book a Call</a>
+          </div>
+          <div class="response-note">
+            <span>⚡ Quick response time</span> · Usually reply within 24 hours
           </div>
         </div>
       </div>
     </section>
 
-    <section id="stack">
+    <section id="about">
       <div class="container">
-        <div class="section-header reveal">
-          <p class="section-label">Stack</p>
-          <h2 class="section-title">What I Build With</h2>
+        <div class="section-header centered">
+          <p class="section-eyebrow">Credentials</p>
+          <h2 class="section-title">Licensed Clinician. Production Engineer.</h2>
+          <p class="section-description">The only developer in healthcare who's actually written prescriptions—and the code that manages them.</p>
         </div>
 
-        <div class="stack-categories">
-          <div class="stack-category reveal">
-            <h3>Frontend</h3>
-            <div class="stack-pills">
-              <span class="stack-pill highlight">React</span>
-              <span class="stack-pill highlight">TypeScript</span>
-              <span class="stack-pill">Tailwind CSS</span>
-              <span class="stack-pill">Vite</span>
-              <span class="stack-pill">PWA</span>
-              <span class="stack-pill">D3.js</span>
-            </div>
+        <div class="credentials-stats">
+          <div class="credential-stat">
+            <div class="credential-number">10,000+</div>
+            <div class="credential-label">Patient Encounters</div>
+            <div class="credential-detail">Telehealth prescribing, 2019–2024</div>
           </div>
-
-          <div class="stack-category reveal">
-            <h3>Backend & Data</h3>
-            <div class="stack-pills">
-              <span class="stack-pill highlight">Firebase</span>
-              <span class="stack-pill">Firestore</span>
-              <span class="stack-pill">IndexedDB</span>
-              <span class="stack-pill">Node.js</span>
-              <span class="stack-pill">REST APIs</span>
-              <span class="stack-pill">Python</span>
-            </div>
+          <div class="credential-stat">
+            <div class="credential-number">3</div>
+            <div class="credential-label">Production Apps</div>
+            <div class="credential-detail">Live users, real PHI, HIPAA-compliant</div>
           </div>
-
-          <div class="stack-category reveal">
-            <h3>AI & Integrations</h3>
-            <div class="stack-pills">
-              <span class="stack-pill highlight">Claude API</span>
-              <span class="stack-pill">OpenAI</span>
-              <span class="stack-pill">Prompt Engineering</span>
-              <span class="stack-pill">Medical NLP</span>
-            </div>
-          </div>
-
-          <div class="stack-category reveal">
-            <h3>Clinical Domain</h3>
-            <div class="stack-pills">
-              <span class="stack-pill">Pharmacokinetics</span>
-              <span class="stack-pill">TRT Protocols</span>
-              <span class="stack-pill">Lab Interpretation</span>
-              <span class="stack-pill">SOAP Documentation</span>
-              <span class="stack-pill">HIPAA Compliance</span>
-            </div>
+          <div class="credential-stat">
+            <div class="credential-number">0</div>
+            <div class="credential-label">Security Breaches</div>
+            <div class="credential-detail">Local-first architecture, zero PHI leaks</div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="contact">
-      <div class="container">
-        <div class="section-header reveal">
-          <p class="section-label">Work Together</p>
-          <h2 class="section-title">Let's Build Something</h2>
+        <div class="section-header" style="margin-bottom: 40px;">
+          <p class="section-eyebrow">Technical Capabilities</p>
+          <h2 class="section-title">Built at the Intersection</h2>
+          <p class="section-description">Clinical protocols are algorithms. SOAP notes are structured data. Pharmacokinetics is math.</p>
         </div>
 
-        <div class="contact-content">
-          <div class="contact-text reveal">
-            <p>
-              Whether you need custom clinical software, want to license existing tools, 
-              or need enterprise deployment—I'd love to hear about your project.
-            </p>
-            
-            <div class="contact-ctas">
-              <a href="mailto:mrossoma@gmail.com" class="contact-card">
-                <div class="contact-card-icon">📧</div>
-                <div class="contact-card-text">
-                  <h4>Email Me</h4>
-                  <p>mrossoma@gmail.com</p>
-                </div>
-              </a>
-              
-              <a href="https://calendly.com/mrossoma" target="_blank" class="contact-card">
-                <div class="contact-card-icon">📅</div>
-                <div class="contact-card-text">
-                  <h4>Book a Call</h4>
-                  <p>30-min intro via Calendly</p>
-                </div>
-              </a>
-              
-              <a href="https://github.com/multifitmatt" target="_blank" class="contact-card">
-                <div class="contact-card-icon">💻</div>
-                <div class="contact-card-text">
-                  <h4>GitHub</h4>
-                  <p>See my code</p>
-                </div>
-              </a>
+        <div class="bento-grid">
+          <div class="bento-item bento-item-large">
+            <div class="bento-icon">💻</div>
+            <h3 class="bento-title">Production Stack</h3>
+            <p class="bento-description"><strong>Not a portfolio—this is what's running in production right now:</strong></p>
+            <div class="tech-grid">
+              <div class="tech-tag">React + TypeScript</div>
+              <div class="tech-tag">Firebase/Firestore</div>
+              <div class="tech-tag">PWA (offline-first)</div>
+              <div class="tech-tag">Claude API</div>
+              <div class="tech-tag">D3.js (PK curves)</div>
+              <div class="tech-tag">Tailwind CSS</div>
+              <div class="tech-tag">Vite</div>
+              <div class="tech-tag">Git/GitHub</div>
             </div>
           </div>
 
-          <div class="services-grid">
-            <div class="service-card reveal">
-              <div class="service-icon">💻</div>
-              <h3 class="service-title">Custom Development</h3>
-              <p class="service-description">
-                Full-stack clinical apps built from scratch. Someone who understands both code and clinical workflows.
-              </p>
-              <span class="service-price">$5k – $25k / project</span>
-            </div>
+          <div class="bento-item">
+            <div class="bento-icon">🔒</div>
+            <h3 class="bento-title">HIPAA Architecture</h3>
+            <p class="bento-description"><strong>Local-first design = zero server-side PHI.</strong> Patient data never leaves their device unless explicitly synced.</p>
+          </div>
 
-            <div class="service-card reveal">
-              <div class="service-icon">📦</div>
-              <h3 class="service-title">Product Licensing</h3>
-              <p class="service-description">
-                White-label my existing tools for your practice. Production-ready in days, not months.
-              </p>
-              <span class="service-price">Custom pricing</span>
-            </div>
+          <div class="bento-item">
+            <div class="bento-icon">🧠</div>
+            <h3 class="bento-title">Clinical Domain Expertise</h3>
+            <p class="bento-description">Testosterone pharmacokinetics. Biomarker interpretation. Drug interactions. SOAP documentation.</p>
+          </div>
 
-            <div class="service-card reveal">
-              <div class="service-icon">🏢</div>
-              <h3 class="service-title">Enterprise Setup</h3>
-              <p class="service-description">
-                Custom Amore deployment with your meds, templates, and workflow pre-configured.
-              </p>
-              <span class="service-price">$3k – $10k setup</span>
-            </div>
+          <div class="bento-item bento-item-large">
+            <div class="bento-icon">⚡</div>
+            <h3 class="bento-title">System Design Principles</h3>
+            <p class="bento-description"><strong>Built for clinicians, not committees:</strong> PWA-first, local storage, smart syncing, mobile-optimized, zero cognitive load.</p>
           </div>
         </div>
       </div>
@@ -1305,61 +1549,68 @@
   </div>
 
   <script>
-    // Nav scroll effect
-    const nav = document.getElementById('nav');
+    // Nav scroll
     window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 50);
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
     });
+
+    // Product card carousel - smooth crossfade
+    const cards = document.querySelectorAll('.product-card');
+    const indicators = document.querySelectorAll('.card-indicator');
+    const products = ['protocol', 'clinref', 'amore'];
+    let currentIndex = 0;
+
+    function showCard(index) {
+      cards.forEach(card => card.classList.remove('active'));
+      indicators.forEach(ind => ind.classList.remove('active'));
+      
+      const product = products[index];
+      document.querySelector(`.product-card[data-product="${product}"]`).classList.add('active');
+      document.querySelector(`.card-indicator[data-card="${product}"]`).classList.add('active');
+    }
+
+    // Auto-rotate every 4 seconds
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % products.length;
+      showCard(currentIndex);
+    }, 4000);
+
+    // Click indicators
+    indicators.forEach((ind, i) => {
+      ind.addEventListener('click', () => {
+        currentIndex = i;
+        showCard(currentIndex);
+      });
+    });
+
+    // Tagline rotation - smooth crossfade
+    const taglines = document.querySelectorAll('.tagline');
+    let taglineIndex = 0;
+
+    setInterval(() => {
+      taglines[taglineIndex].classList.remove('active');
+      taglineIndex = (taglineIndex + 1) % taglines.length;
+      taglines[taglineIndex].classList.add('active');
+    }, 3500);
 
     // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
-    // Scroll reveal animations
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-
+    // Fade in on scroll
+    const fadeElements = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add('visible');
-          }, index * 100);
-        }
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
-    }, observerOptions);
+    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Mobile menu (simple toggle)
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (mobileBtn) {
-      mobileBtn.addEventListener('click', () => {
-        const isVisible = navLinks.style.display === 'flex';
-        navLinks.style.display = isVisible ? 'none' : 'flex';
-        navLinks.style.position = isVisible ? '' : 'absolute';
-        navLinks.style.top = isVisible ? '' : '100%';
-        navLinks.style.left = isVisible ? '' : '0';
-        navLinks.style.right = isVisible ? '' : '0';
-        navLinks.style.background = isVisible ? '' : 'rgba(0,0,0,0.95)';
-        navLinks.style.flexDirection = isVisible ? '' : 'column';
-        navLinks.style.padding = isVisible ? '' : '24px';
-        navLinks.style.gap = isVisible ? '' : '16px';
-        navLinks.style.borderBottom = isVisible ? '' : '1px solid rgba(255,255,255,0.08)';
-      });
-    }
+    fadeElements.forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
