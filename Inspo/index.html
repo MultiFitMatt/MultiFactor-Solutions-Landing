@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matt Ross — MultiFactor Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #26e5a4;
+      --secondary: #8b5cf6;
+      --tertiary: #3b82f6;
+      --bg-dark: #000000;
+      --surface: #0a0a0c;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: #ffffff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      pointer-events: none;
+    }
+
+    /* Ambient Background */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      top: 10%;
+      left: 20%;
+      width: 400px;
+      height: 400px;
+      background: var(--primary);
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      bottom: 20%;
+      right: 15%;
+      width: 500px;
+      height: 500px;
+      background: var(--tertiary);
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      top: 50%;
+      right: 30%;
+      width: 350px;
+      height: 350px;
+      background: var(--secondary);
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-30px, 30px) rotate(240deg); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      transition: all 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    nav .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-center;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .nav-link {
+      color: #888;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+    }
+
+    .nav-cta {
+      padding: 10px 20px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+    }
+
+    .hero .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(48px, 6vw, 76px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+    }
+
+    .healthcare {
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+    }
+
+    .problem {
+      background: linear-gradient(135deg, #ff3b3b 0%, #ff8f3b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(255, 59, 59, 0.2));
+    }
+
+    .solution {
+      font-style: italic;
+      background: linear-gradient(135deg, #26e5a4 0%, #3b82f6 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(38, 229, 164, 0.2));
+      padding-right: 12px;
+      display: inline-block;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: #999;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 540px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 4px 16px rgba(38, 229, 164, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(38, 229, 164, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Floating Card Carousel */
+    .floating-card-container {
+      position: relative;
+      height: 600px;
+    }
+
+    .floating-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-6deg) scale(0.9);
+      width: 400px;
+      height: 500px;
+      background: rgba(10, 10, 12, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      filter: blur(20px);
+      pointer-events: none;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .floating-card.active {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translate(-50%, -50%) rotate(-6deg) scale(1);
+    }
+
+    .floating-card.morphing-out {
+      opacity: 0;
+      filter: blur(15px);
+      transform: translate(-50%, -50%) rotate(-12deg) scale(0.85);
+    }
+
+    #card-protocol.active {
+      animation: cardFloatProtocol 6s ease-in-out infinite;
+    }
+
+    #card-clinref.active {
+      animation: cardFloatClinref 6s ease-in-out infinite;
+    }
+
+    #card-amore.active {
+      animation: cardFloatAmore 6s ease-in-out infinite;
+    }
+
+    @keyframes cardFloatProtocol {
+      0%, 100% { 
+        transform: translate(-50%, -50%) rotate(-6deg) scale(1) translateY(0); 
+      }
+      50% { 
+        transform: translate(-50%, -50%) rotate(-6deg) scale(1) translateY(-20px); 
+      }
+    }
+
+    @keyframes cardFloatClinref {
+      0%, 100% { 
+        transform: translate(-50%, -50%) rotate(-4deg) scale(1) translateY(0); 
+      }
+      50% { 
+        transform: translate(-50%, -50%) rotate(-4deg) scale(1) translateY(-18px); 
+      }
+    }
+
+    @keyframes cardFloatAmore {
+      0%, 100% { 
+        transform: translate(-50%, -50%) rotate(-7deg) scale(1) translateY(0); 
+      }
+      50% { 
+        transform: translate(-50%, -50%) rotate(-7deg) scale(1) translateY(-22px); 
+      }
+    }
+
+    /* Shimmer effect during morph */
+    .floating-card::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, var(--primary), var(--tertiary), var(--secondary));
+      border-radius: 24px;
+      opacity: 0;
+      z-index: -1;
+      filter: blur(20px);
+      transition: opacity 0.4s ease;
+    }
+
+    .floating-card.active::after {
+      animation: glowPulse 6s ease-in-out infinite;
+    }
+
+    .floating-card.morphing-out::after {
+      opacity: 0.6;
+      animation: glowExplosion 0.8s ease-out forwards;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.35; }
+    }
+
+    @keyframes glowExplosion {
+      0% { 
+        opacity: 0.3; 
+        filter: blur(20px); 
+        transform: scale(1);
+      }
+      50% { 
+        opacity: 0.6; 
+        filter: blur(40px); 
+        transform: scale(1.2);
+      }
+      100% { 
+        opacity: 0; 
+        filter: blur(60px); 
+        transform: scale(1.5);
+      }
+    }
+
+    /* Content morphing animations */
+    .floating-card > * {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .floating-card.morphing-out > * {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .floating-card.morphing-out .card-header {
+      transform: translateY(-10px) scale(0.9);
+      transition-delay: 0s;
+    }
+
+    .floating-card.morphing-out .card-title {
+      transform: translateX(-20px);
+      transition-delay: 0.05s;
+    }
+
+    .floating-card.morphing-out .card-chart,
+    .floating-card.morphing-out .card-visual-wrapper {
+      transform: scale(0.8) rotate(5deg);
+      transition-delay: 0.1s;
+    }
+
+    .floating-card.morphing-out .card-info {
+      transform: translateY(20px);
+      transition-delay: 0.15s;
+    }
+
+    /* Morph-in animations */
+    .floating-card.active > * {
+      animation: contentMorphIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .floating-card.active .card-header {
+      animation-delay: 0.1s;
+    }
+
+    .floating-card.active .card-title {
+      animation-delay: 0.15s;
+    }
+
+    .floating-card.active .card-chart,
+    .floating-card.active .card-visual-wrapper {
+      animation-delay: 0.2s;
+    }
+
+    .floating-card.active .card-info {
+      animation-delay: 0.25s;
+    }
+
+    @keyframes contentMorphIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Morphing state for container */
+    .floating-card-container.morphing .glass-card-bg {
+      animation: none;
+      transform: translate(-50%, -50%) rotate(0deg) scale(1.1);
+      opacity: 0.5;
+      filter: blur(60px);
+    }
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+      );
+      border-radius: 24px;
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 0.3s;
+    }
+
+    .floating-card.morphing-out::after {
+      opacity: 1;
+      animation: shimmer 0.8s ease-out;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Morph particles */
+    .floating-card-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+      animation: particleRotate 20s linear infinite;
+    }
+
+    .floating-card-container.morphing::before {
+      opacity: 1;
+    }
+
+    @keyframes particleRotate {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Glow intensity during morph */
+    .glass-card-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      box-shadow: 
+        inset 0 0 60px rgba(38, 229, 164, 0),
+        0 0 80px rgba(38, 229, 164, 0);
+      transition: box-shadow 0.8s ease;
+    }
+
+    .floating-card-container.morphing .glass-card-bg::after {
+      box-shadow: 
+        inset 0 0 60px rgba(38, 229, 164, 0.2),
+        0 0 80px rgba(38, 229, 164, 0.3);
+    }
+
+    .floating-card-container.morphing.clinref .glass-card-bg::after {
+      box-shadow: 
+        inset 0 0 60px rgba(59, 130, 246, 0.2),
+        0 0 80px rgba(59, 130, 246, 0.3);
+    }
+
+    .floating-card-container.morphing.amore .glass-card-bg::after {
+      box-shadow: 
+        inset 0 0 60px rgba(139, 92, 246, 0.2),
+        0 0 80px rgba(139, 92, 246, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .card-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: rgba(239, 68, 68, 0.5); }
+    .dot-yellow { background: rgba(251, 191, 36, 0.5); }
+    .dot-green { background: rgba(34, 197, 94, 0.5); }
+
+    .card-badge {
+      padding: 4px 12px;
+      background: rgba(38, 229, 164, 0.1);
+      border: 1px solid rgba(38, 229, 164, 0.2);
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-badge.blue {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: var(--tertiary);
+    }
+
+    .card-badge.purple {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--secondary);
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 24px;
+    }
+
+    .card-chart {
+      height: 160px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 100%;
+      gap: 4px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--primary), transparent);
+      border-radius: 4px 4px 0 0;
+      transition: all 0.3s;
+      opacity: 0.7;
+    }
+
+    .chart-bar:hover {
+      opacity: 1;
+      background: linear-gradient(180deg, var(--primary), var(--tertiary));
+    }
+
+    .card-info {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-info-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-info-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .card-progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .card-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--tertiary));
+      border-radius: 100px;
+      width: 85%;
+    }
+
+    .card-visual-wrapper {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .glass-card-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(6deg);
+      width: 400px;
+      height: 500px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      z-index: -1;
+      animation: cardFloat 6s ease-in-out infinite -3s;
+    }
+
+    .glass-card-bg::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.2;
+      transition: background 1s ease;
+      animation: glowPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.25; transform: scale(1.1); }
+    }
+
+    .floating-card-container.protocol .glass-card-bg::before {
+      background: radial-gradient(circle, rgba(38, 229, 164, 0.4), transparent 70%);
+    }
+
+    .floating-card-container.clinref .glass-card-bg::before {
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent 70%);
+    }
+
+    .floating-card-container.amore .glass-card-bg::before {
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%);
+    }
+
+    /* Bento Grid Section */
+    .bento-section {
+      padding: 120px 0;
+    }
+
+    .bento-section .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .section-header {
+      margin-bottom: 64px;
+      max-width: 600px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .section-title {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .section-description {
+      font-size: 18px;
+      color: #999;
+      line-height: 1.7;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      grid-auto-rows: minmax(200px, auto);
+    }
+
+    .bento-item {
+      background: rgba(10, 10, 12, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 32px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bento-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(38, 229, 164, 0.2), rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .bento-item:hover {
+      background: rgba(10, 10, 12, 0.8);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .bento-item:hover::before {
+      opacity: 1;
+    }
+
+    .bento-item-large {
+      grid-column: span 2;
+    }
+
+    .bento-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-center;
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+
+    .bento-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .bento-description {
+      font-size: 14px;
+      color: #999;
+      line-height: 1.7;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .tech-tag {
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      color: #999;
+      transition: all 0.2s;
+    }
+
+    .tech-tag:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Products Section */
+    .products-section {
+      padding: 100px 0 120px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 64px;
+    }
+
+    .product-card {
+      position: relative;
+      height: 600px;
+      perspective: 1000px;
+    }
+
+    .product-card-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 380px;
+      height: 520px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .product-card:nth-child(1) .product-card-inner {
+      animation: floatCard1 8s ease-in-out infinite;
+    }
+
+    .product-card:nth-child(2) .product-card-inner {
+      animation: floatCard2 7s ease-in-out infinite;
+    }
+
+    .product-card:nth-child(3) .product-card-inner {
+      animation: floatCard3 9s ease-in-out infinite;
+    }
+
+    @keyframes floatCard1 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-4deg) translateY(0); }
+      50% { transform: translate(-50%, -50%) rotate(-4deg) translateY(-20px); }
+    }
+
+    @keyframes floatCard2 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(3deg) translateY(0); }
+      50% { transform: translate(-50%, -50%) rotate(3deg) translateY(-25px); }
+    }
+
+    @keyframes floatCard3 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) translateY(0); }
+      50% { transform: translate(-50%, -50%) rotate(-5deg) translateY(-18px); }
+    }
+
+    .product-card:hover .product-card-inner {
+      transform: translate(-50%, -50%) rotate(0deg) translateY(-30px) scale(1.05);
+    }
+
+    .product-card-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 12, 0.7);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backface-visibility: hidden;
+    }
+
+    .product-card:nth-child(1) .product-card-front::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .product-card:nth-child(2) .product-card-front::before {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -30%;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(38, 229, 164, 0.15), transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .product-card:nth-child(3) .product-card-front::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -40%;
+      width: 190px;
+      height: 190px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .product-card-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 380px;
+      height: 520px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      z-index: -1;
+    }
+
+    .product-card:nth-child(1) .product-card-bg {
+      animation: floatCardBg1 8s ease-in-out infinite -4s;
+    }
+
+    .product-card:nth-child(2) .product-card-bg {
+      animation: floatCardBg2 7s ease-in-out infinite -3.5s;
+    }
+
+    .product-card:nth-child(3) .product-card-bg {
+      animation: floatCardBg3 9s ease-in-out infinite -4.5s;
+    }
+
+    @keyframes floatCardBg1 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(6deg) scale(0.95); }
+      50% { transform: translate(-50%, -50%) rotate(6deg) scale(0.95) translateY(15px); }
+    }
+
+    @keyframes floatCardBg2 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) scale(0.95); }
+      50% { transform: translate(-50%, -50%) rotate(-5deg) scale(0.95) translateY(18px); }
+    }
+
+    @keyframes floatCardBg3 {
+      0%, 100% { transform: translate(-50%, -50%) rotate(7deg) scale(0.95); }
+      50% { transform: translate(-50%, -50%) rotate(7deg) scale(0.95) translateY(12px); }
+    }
+
+    .product-visual {
+      height: 240px;
+      background: #050507;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-content {
+      padding: 32px;
+    }
+
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .product-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .product-status {
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .status-green {
+      background: rgba(38, 229, 164, 0.1);
+      border: 1px solid rgba(38, 229, 164, 0.3);
+      color: var(--primary);
+    }
+
+    .status-blue {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--tertiary);
+    }
+
+    .status-purple {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--secondary);
+    }
+
+    .product-description {
+      font-size: 14px;
+      color: #999;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .product-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .product-tag {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .product-tag:nth-child(1) { color: var(--primary); border-color: rgba(38, 229, 164, 0.2); }
+    .product-tag:nth-child(2) { color: var(--tertiary); border-color: rgba(59, 130, 246, 0.2); }
+    .product-tag:nth-child(3) { color: var(--secondary); border-color: rgba(139, 92, 246, 0.2); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 40px 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    footer .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .floating-card-container {
+        display: none;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-item-large {
+        grid-column: span 1;
+      }
+
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-card {
+        height: 580px;
+      }
+
+      .product-card-inner {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav .container,
+      .hero .container,
+      .bento-section .container,
+      .products-section .container,
+      footer .container {
+        padding: 0 24px;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+      }
+
+      .hero-stats {
+        gap: 32px;
+      }
+
+      footer .container {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+    /* Shimmer wave effect */
+    .floating-card.active::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      opacity: 0;
+      animation: shimmerWave 8s ease-in-out infinite 2s;
+      pointer-events: none;
+    }
+
+    @keyframes shimmerWave {
+      0%, 100% { opacity: 0; transform: translateX(-100%) translateY(-100%); }
+      50% { opacity: 1; transform: translateX(100%) translateY(100%); }
+    }
+    /* Enhanced liquid morphing for individual elements */
+    .card-title,
+    .card-subtitle,
+    .card-badge {
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .card-chart,
+    .card-visual-wrapper,
+    .card-info {
+      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .floating-card.morphing-out .card-title {
+      opacity: 0;
+      transform: translateY(-30px) rotateX(90deg);
+    }
+
+    .floating-card.morphing-out .card-subtitle {
+      opacity: 0;
+      transform: translateX(-40px) scale(0.8);
+    }
+
+    .floating-card.morphing-out .card-badge {
+      opacity: 0;
+      transform: translateX(40px) rotate(180deg) scale(0);
+    }
+
+    .floating-card.morphing-out .card-chart,
+    .floating-card.morphing-out .card-visual-wrapper {
+      opacity: 0;
+      transform: scale(0.6) translateY(40px) rotateY(180deg);
+    }
+
+    .floating-card.morphing-out .card-info {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+
+    /* Particle swirl effect during morph */
+    .floating-card-container.morphing::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 2px, transparent 2px);
+      background-size: 50px 50px;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      animation: particleSwirl 0.8s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @keyframes particleSwirl {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+      }
+      50% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) rotate(180deg) scale(1.3);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(360deg) scale(0.5);
+      }
+    }
+    /* Rotating Tagline */
+    .rotating-tagline-container {
+      position: relative;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 32px 0 40px 0;
+    }
+
+    .rotating-tagline {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+      color: #9ca3af;
+      text-align: center;
+      opacity: 0;
+      animation: taglineFade 48s infinite;
+    }
+
+    .rotating-tagline:nth-child(1)  { animation-delay: 0s; }
+    .rotating-tagline:nth-child(2)  { animation-delay: 4s; }
+    .rotating-tagline:nth-child(3)  { animation-delay: 8s; }
+    .rotating-tagline:nth-child(4)  { animation-delay: 12s; }
+    .rotating-tagline:nth-child(5)  { animation-delay: 16s; }
+    .rotating-tagline:nth-child(6)  { animation-delay: 20s; }
+    .rotating-tagline:nth-child(7)  { animation-delay: 24s; }
+    .rotating-tagline:nth-child(8)  { animation-delay: 28s; }
+    .rotating-tagline:nth-child(9)  { animation-delay: 32s; }
+    .rotating-tagline:nth-child(10) { animation-delay: 36s; }
+    .rotating-tagline:nth-child(11) { animation-delay: 40s; }
+    .rotating-tagline:nth-child(12) { animation-delay: 44s; }
+
+    @keyframes taglineFade {
+      0%, 100% { opacity: 0; transform: translateY(8px); }
+      2%, 6% { opacity: 1; transform: translateY(0); }
+      8%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+
+    @media (max-width: 768px) {
+      .rotating-tagline-container {
+        height: 50px;
+        margin: 24px 0 32px 0;
+      }
+      
+      .rotating-tagline {
+        font-size: 15px;
+        padding: 0 20px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="ambient">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <div class="content">
+    <nav id="nav">
+      <div class="container">
+        <div class="logo">
+          <div class="logo-icon">MF</div>
+          <span>Matt Ross</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 32px;">
+          <a href="#work" class="nav-link">Work</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="/cdn-cgi/l/email-protection#dab7a8b5a9a9b5b7bb9abdb7bbb3b6f4b9b5b7" class="nav-cta">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>
+            <span class="healthcare">Healthcare</span> doesn't need another <span class="problem">problem.</span><br>
+            It needs a <span class="solution">MF Solution.</span>
+          </h1>
+          
+          <div class="rotating-tagline-container">
+            <p class="rotating-tagline">From running codes to writing code.</p>
+            <p class="rotating-tagline">From fractures to refactors.</p>
+            <p class="rotating-tagline">From AKIs to APIs.</p>
+            <p class="rotating-tagline">From admissions to permissions.</p>
+            <p class="rotating-tagline">From SOAP to CRUD.</p>
+            <p class="rotating-tagline">I learned some systems. Then I learned some more.</p>
+            <p class="rotating-tagline">The system is broken. I'm putting the heart back in healthcare.</p>
+            <p class="rotating-tagline">Medicine deserves its heart back — I'm here to return it.</p>
+            <p class="rotating-tagline">Integrating systems with systems.</p>
+            <p class="rotating-tagline">I learned their systems. Then I built my own.</p>
+            <p class="rotating-tagline">I didn't switch EMRs. I built one.</p>
+            <p class="rotating-tagline">If you can't beat the system… rewrite it.</p>
+          </div>
+          
+          <p class="hero-subtitle">
+            I bridge the gap between <span style="color: #ffffff; font-weight: 600;">Clinical Protocols</span> and 
+            <span style="color: #ffffff; font-weight: 600;">Production Code</span>. 
+            Five years prescribing hormones. Three years shipping software. Zero tolerance for clunky healthcare UX.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#work" class="btn btn-primary">
+              View Work →
+            </a>
+            <a href="/cdn-cgi/l/email-protection#3459465b47475b5955745359555d581a575b59" class="btn btn-secondary">
+              Get in Touch
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div>
+              <span class="stat-number">3+</span>
+              <span class="stat-label">Shipped Products</span>
+            </div>
+            <div>
+              <span class="stat-number">100%</span>
+              <span class="stat-label">HIPAA Compliant</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-card-container">
+          <div class="glass-card-bg"></div>
+          
+          <!-- Card 1: Protocol -->
+          <div class="floating-card active" id="card-protocol">
+            <div class="card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge">LIVE</div>
+            </div>
+
+            <h3 class="card-title">Protocol</h3>
+            <p class="card-subtitle">Biomarker Tracking</p>
+
+            <div style="background: rgba(5,5,7,0.95); border: 1px solid rgba(38,229,164,0.25); border-radius: 14px; padding: 14px; margin-bottom: 20px; overflow: hidden;">
+              <!-- Lab Timing Header -->
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <div style="font-size: 16px;">🧪</div>
+                <div style="font-size: 10px; color: #999; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">LAB TIMING & DPD</div>
+              </div>
+              
+              <!-- Lab Date/Time -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+                <div>
+                  <div style="font-size: 8px; color: #666; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase;">Lab Date</div>
+                  <div style="padding: 7px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: #e5e5e5; font-weight: 500;">12/22/2025</div>
+                </div>
+                <div>
+                  <div style="font-size: 8px; color: #666; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase;">Lab Time</div>
+                  <div style="padding: 7px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: #e5e5e5; font-weight: 500;">08:00 AM</div>
+                </div>
+              </div>
+
+              <!-- Alerts Section -->
+              <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 7px;">
+                <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 6px;">
+                  <span style="font-size: 12px;">💧</span>
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 9px; color: #fbbf24; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hydration Reminders</div>
+                    <div style="font-size: 8px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Start 7 days before</div>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18); border-radius: 6px;">
+                  <span style="font-size: 12px;">⚠️</span>
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 9px; color: #ef4444; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">48-hour dosing warning</div>
+                    <div style="font-size: 8px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Avoid dosing within 48h</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Timeline Graph -->
+              <div style="height: 75px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 8px; position: relative; overflow: hidden;">
+                <svg viewBox="0 0 200 60" style="width: 100%; height: 100%;">
+                  <defs>
+                    <linearGradient id="protocolGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#26e5a4;stop-opacity:0.3" />
+                      <stop offset="100%" style="stop-color:#26e5a4;stop-opacity:0" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Biomarker trend line -->
+                  <path d="M0,50 L25,45 L50,35 L75,40 L100,30 L125,38 L150,32 L175,35 L200,30" 
+                        fill="none" 
+                        stroke="#26e5a4" 
+                        stroke-width="2"
+                        opacity="0.9"/>
+                  <path d="M0,50 L25,45 L50,35 L75,40 L100,30 L125,38 L150,32 L175,35 L200,30 V60 H0 Z" 
+                        fill="url(#protocolGrad)"/>
+                  <circle cx="100" cy="30" r="3" fill="#26e5a4" opacity="0.9">
+                    <animate attributeName="r" values="3;4.5;3" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+                <div style="position: absolute; bottom: 6px; right: 6px; padding: 2px 6px; background: rgba(38,229,164,0.15); border: 1px solid rgba(38,229,164,0.3); border-radius: 4px; font-size: 7px; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700;">DPD VIEW</div>
+              </div>
+            </div>
+
+            <div class="card-info">
+              <div class="card-info-row">
+                <span class="card-info-label">Next Lab Draw</span>
+                <span class="card-info-value">Dec 22</span>
+              </div>
+              <div class="card-progress">
+                <div class="card-progress-fill" style="width: 65%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: MF-ClinRef -->
+          <div class="floating-card" id="card-clinref">
+            <div class="card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge blue">LIVE</div>
+            </div>
+
+            <h3 class="card-title">MF-ClinRef</h3>
+            <p class="card-subtitle">Androgen Optimization</p>
+
+            <div style="background: rgba(5,5,7,0.95); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 20px; overflow: hidden;">
+              <!-- Protocol Tabs -->
+              <div style="display: flex; gap: 6px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <div style="padding: 5px 10px; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); border-radius: 5px; font-size: 9px; color: var(--tertiary); font-weight: 700; white-space: nowrap;">CYP</div>
+                <div style="padding: 5px 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; font-size: 9px; color: #555; font-weight: 700; white-space: nowrap;">PROP</div>
+                <div style="padding: 5px 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 5px; font-size: 9px; color: #555; font-weight: 700; white-space: nowrap;">PELLETS</div>
+              </div>
+              
+              <!-- PK Curve Visualization -->
+              <div style="height: 105px; margin-bottom: 14px; position: relative; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 8px; overflow: hidden;">
+                <svg viewBox="0 0 300 100" style="width: 100%; height: 100%;">
+                  <defs>
+                    <linearGradient id="clinrefGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.35" />
+                      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Grid lines -->
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                  <line x1="0" y1="50" x2="300" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                  <!-- Steady state waves -->
+                  <path d="M0,70 Q15,25 30,30 Q45,35 60,25 Q75,20 90,30 Q105,40 120,25 Q135,15 150,30 Q165,45 180,25 Q195,10 210,30 Q225,50 240,25 Q255,5 270,30 Q285,50 300,30" 
+                        fill="none" 
+                        stroke="#3b82f6" 
+                        stroke-width="2.5"
+                        opacity="0.85"/>
+                  <path d="M0,70 Q15,25 30,30 Q45,35 60,25 Q75,20 90,30 Q105,40 120,25 Q135,15 150,30 Q165,45 180,25 Q195,10 210,30 Q225,50 240,25 Q255,5 270,30 Q285,50 300,30 V100 H0 Z" 
+                        fill="url(#clinrefGrad)"/>
+                  <!-- Peak marker -->
+                  <circle cx="90" cy="30" r="3" fill="#3b82f6" opacity="0.9">
+                    <animate attributeName="r" values="3;4.5;3" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                  <!-- Tooltip -->
+                  <rect x="70" y="8" width="48" height="16" rx="4" fill="rgba(0,0,0,0.85)" />
+                  <text x="94" y="18" text-anchor="middle" fill="#3b82f6" font-size="9" font-weight="700">Day 4.76</text>
+                </svg>
+              </div>
+              
+              <!-- Stats Grid -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                <div style="padding: 7px 8px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; overflow: hidden;">
+                  <div style="font-size: 7px; color: #666; margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PEAK</div>
+                  <div style="font-size: 13px; color: var(--tertiary); font-weight: 700;">1015</div>
+                </div>
+                <div style="padding: 7px 8px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; overflow: hidden;">
+                  <div style="font-size: 7px; color: #666; margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TROUGH</div>
+                  <div style="font-size: 13px; color: var(--tertiary); font-weight: 700;">876</div>
+                </div>
+                <div style="padding: 7px 8px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; overflow: hidden;">
+                  <div style="font-size: 7px; color: #666; margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">VAR</div>
+                  <div style="font-size: 13px; color: var(--tertiary); font-weight: 700;">14%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-info">
+              <div class="card-info-row">
+                <span class="card-info-label">Protocols Loaded</span>
+                <span class="card-info-value" style="color: #3b82f6;">20+</span>
+              </div>
+              <div class="card-progress">
+                <div class="card-progress-fill" style="background: linear-gradient(90deg, #3b82f6, #60a5fa); width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Amore -->
+          <div class="floating-card" id="card-amore">
+            <div class="card-header">
+              <div class="card-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="card-badge purple">BETA</div>
+            </div>
+
+            <h3 class="card-title">Amore</h3>
+            <p class="card-subtitle">AI Documentation</p>
+
+            <div style="background: rgba(5,5,7,0.95); border: 1px solid rgba(139,92,246,0.25); border-radius: 14px; padding: 14px; margin-bottom: 20px; overflow: hidden;">
+              <!-- Input -->
+              <div style="margin-bottom: 11px;">
+                <div style="font-size: 9px; color: #888; margin-bottom: 7px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">SHORTHAND INPUT:</div>
+                <div style="padding: 9px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 7px; font-size: 11px; color: #aaa; line-height: 1.5; overflow: hidden; text-overflow: ellipsis;">
+                  45M c/o fatigue, low libido. TT 280...
+                </div>
+              </div>
+              
+              <!-- AI Processing -->
+              <div style="display: flex; align-items: center; gap: 7px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 11px; overflow: hidden;">
+                <div style="width: 18px; height: 18px; background: rgba(139,92,246,0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0;">🤖</div>
+                <div style="flex: 1; display: flex; gap: 4px; align-items: center; min-width: 0;">
+                  <div style="width: 4px; height: 4px; background: var(--secondary); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; flex-shrink: 0;"></div>
+                  <div style="font-size: 9px; color: #999; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Generating SOAP note...</div>
+                </div>
+              </div>
+              
+              <!-- Output -->
+              <div style="overflow: hidden;">
+                <div style="font-size: 9px; color: #888; margin-bottom: 7px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">STRUCTURED OUTPUT:</div>
+                <div style="padding: 10px; background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.18); border-radius: 7px; font-size: 10px; color: #ccc; line-height: 1.6; overflow: hidden;">
+                  <div style="margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis;"><strong style="color: var(--secondary);">S:</strong> 45-year-old male presenting with chief complaints...</div>
+                  <div style="overflow: hidden; text-overflow: ellipsis;"><strong style="color: var(--secondary);">O:</strong> Total Testosterone: 280 ng/dL (ref: 300-1000)...</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-info">
+              <div class="card-info-row">
+                <span class="card-info-label">Notes Generated</span>
+                <span class="card-info-value" style="color: #8b5cf6;">500+</span>
+              </div>
+              <div class="card-progress">
+                <div class="card-progress-fill" style="background: linear-gradient(90deg, #8b5cf6, #a78bfa); width: 75%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-section" id="work">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">Products</p>
+          <h2 class="section-title">Built for Real Clinical Workflows</h2>
+          <p class="section-description" style="max-width: 700px; margin: 0 auto;">
+            Production-ready tools you can use today. License my existing apps or hire me to build something custom.
+          </p>
+        </div>
+
+        <div class="products-grid">
+          <!-- MF-ClinRef -->
+          <div class="product-card">
+            <div class="product-card-bg"></div>
+            <div class="product-card-inner">
+              <div class="product-card-front">
+                <div class="product-visual">
+                  <div style="width: 90%; height: 90%; background: rgba(5,5,7,0.95); border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; overflow: hidden;">
+                    <!-- Header with tabs -->
+                    <div style="display: flex; gap: 5px; margin-bottom: 12px; padding-bottom: 9px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                      <div style="padding: 4px 9px; background: rgba(59,130,246,0.22); border: 1px solid rgba(59,130,246,0.45); border-radius: 4px; font-size: 8px; color: var(--tertiary); font-weight: 700; white-space: nowrap;">CYPIONATE</div>
+                      <div style="padding: 4px 9px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 8px; color: #555; font-weight: 700; white-space: nowrap;">PROPION</div>
+                      <div style="padding: 4px 9px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 8px; color: #555; font-weight: 700; white-space: nowrap;">PELLETS</div>
+                    </div>
+                    
+                    <!-- Live PK curve -->
+                    <div style="flex: 1; min-height: 0; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 7px; margin-bottom: 11px; position: relative; overflow: hidden;">
+                      <svg viewBox="0 0 200 80" style="width: 100%; height: 100%;">
+                        <defs>
+                          <linearGradient id="prodPkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.35" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                          </linearGradient>
+                        </defs>
+                        <!-- Steady-state waves -->
+                        <path d="M0,60 Q10,20 20,25 Q30,30 40,20 Q50,15 60,25 Q70,35 80,20 Q90,10 100,25 Q110,40 120,20 Q130,8 140,25 Q150,42 160,20 Q170,5 180,25 Q190,45 200,25" 
+                              fill="none" 
+                              stroke="#3b82f6" 
+                              stroke-width="2"
+                              opacity="0.9"/>
+                        <path d="M0,60 Q10,20 20,25 Q30,30 40,20 Q50,15 60,25 Q70,35 80,20 Q90,10 100,25 Q110,40 120,20 Q130,8 140,25 Q150,42 160,20 Q170,5 180,25 Q190,45 200,25 V80 H0 Z" 
+                              fill="url(#prodPkGrad)"/>
+                        <circle cx="60" cy="25" r="2.5" fill="#3b82f6" opacity="0.9">
+                          <animate attributeName="r" values="2.5;3.5;2.5" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                      </svg>
+                      <div style="position: absolute; top: 5px; right: 5px; font-size: 6px; color: #666; font-family: 'JetBrains Mono', monospace;">LIVE MODEL</div>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;">
+                      <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center; overflow: hidden;">
+                        <div style="font-size: 6px; color: #666; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PEAK</div>
+                        <div style="font-size: 10px; color: var(--tertiary); font-weight: 700;">1015</div>
+                      </div>
+                      <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center; overflow: hidden;">
+                        <div style="font-size: 6px; color: #666; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TROUGH</div>
+                        <div style="font-size: 10px; color: var(--tertiary); font-weight: 700;">876</div>
+                      </div>
+                      <div style="padding: 5px 6px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 5px; text-align: center; overflow: hidden;">
+                        <div style="font-size: 6px; color: #666; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">VAR</div>
+                        <div style="font-size: 10px; color: var(--tertiary); font-weight: 700;">14%</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-content">
+                  <div class="product-header">
+                    <h3 class="product-title">MF-ClinRef</h3>
+                    <span class="product-status status-green">LIVE</span>
+                  </div>
+                  <p class="product-description">
+                    Integrated pharmacokinetic modeling engine for therapeutic androgen optimization. 
+                    Visualize steady-state overlaps, customize protocols, and simulate patient-specific dosing strategies in real-time.
+                  </p>
+                  <div class="product-tags">
+                    <span class="product-tag">PK Modeling</span>
+                    <span class="product-tag">3 Formulations</span>
+                    <span class="product-tag">Live Simulation</span>
+                  </div>
+                  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 12px;">
+                    <a href="https://multifitmatt.github.io/MF-ClinRef/" target="_blank" style="flex: 1; padding: 10px 16px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); border-radius: 8px; color: var(--tertiary); text-decoration: none; font-size: 13px; font-weight: 600; text-align: center; transition: all 0.3s;">
+                      Try Demo →
+                    </a>
+                    <a href="/cdn-cgi/l/email-protection#a2cfd0cdd1d1cdcfc3e2c5cfc3cbce8cc1cdcf9dd1d7c0c8c7c1d69feecbc1c7ccd1c782efe48fe1cecbccf0c7c4" style="flex: 1; padding: 10px 16px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.4); border-radius: 8px; color: var(--tertiary); text-decoration: none; font-size: 13px; font-weight: 600; text-align: center; transition: all 0.3s;">
+                      License It
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Protocol -->
+          <div class="product-card">
+            <div class="product-card-bg"></div>
+            <div class="product-card-inner">
+              <div class="product-card-front">
+                <div class="product-visual">
+                  <div style="width: 90%; height: 90%; background: rgba(5,5,7,0.95); border: 1px solid rgba(38,229,164,0.2); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; overflow: hidden;">
+                    <!-- Lab Timing Header -->
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                      <div style="font-size: 15px;">🧪</div>
+                      <div style="font-size: 9px; color: #999; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">BIOMARKER TRACKING</div>
+                    </div>
+                    
+                    <!-- Lab Date/Time Grid -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 11px;">
+                      <div style="padding: 7px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden;">
+                        <div style="font-size: 7px; color: #666; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LAB DATE</div>
+                        <div style="font-size: 10px; color: #e5e5e5; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">12/22/2025</div>
+                      </div>
+                      <div style="padding: 7px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden;">
+                        <div style="font-size: 7px; color: #666; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LAB TIME</div>
+                        <div style="font-size: 10px; color: #e5e5e5; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">08:00 AM</div>
+                      </div>
+                    </div>
+
+                    <!-- Alert Badges -->
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 11px;">
+                      <div style="display: flex; align-items: center; gap: 5px; padding: 5px 7px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 5px; overflow: hidden;">
+                        <span style="font-size: 11px; flex-shrink: 0;">💧</span>
+                        <div style="font-size: 8px; color: #fbbf24; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hydration (7d)</div>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 5px; padding: 5px 7px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18); border-radius: 5px; overflow: hidden;">
+                        <span style="font-size: 11px; flex-shrink: 0;">⚠️</span>
+                        <div style="font-size: 8px; color: #ef4444; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">48h Dose Alert</div>
+                      </div>
+                    </div>
+
+                    <!-- Biomarker Graph -->
+                    <div style="flex: 1; min-height: 0; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 7px; position: relative; overflow: hidden;">
+                      <svg viewBox="0 0 200 70" style="width: 100%; height: 100%;">
+                        <defs>
+                          <linearGradient id="prodProtocolGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#26e5a4;stop-opacity:0.3" />
+                            <stop offset="100%" style="stop-color:#26e5a4;stop-opacity:0" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M0,55 L25,50 L50,40 L75,45 L100,35 L125,43 L150,37 L175,40 L200,35" 
+                              fill="none" 
+                              stroke="#26e5a4" 
+                              stroke-width="2"
+                              opacity="0.9"/>
+                        <path d="M0,55 L25,50 L50,40 L75,45 L100,35 L125,43 L150,37 L175,40 L200,35 V70 H0 Z" 
+                              fill="url(#prodProtocolGrad)"/>
+                        <circle cx="100" cy="35" r="2.5" fill="#26e5a4" opacity="0.9">
+                          <animate attributeName="r" values="2.5;3.5;2.5" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                      </svg>
+                      <div style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; background: rgba(38,229,164,0.15); border: 1px solid rgba(38,229,164,0.3); border-radius: 3px; font-size: 6px; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700;">DPD</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-content">
+                  <div class="product-header">
+                    <h3 class="product-title">Protocol</h3>
+                    <span class="product-status status-blue">LIVE</span>
+                  </div>
+                  <p class="product-description">
+                    Lab timing intelligence with DPD normalization. Track biomarkers by cycle context, not calendar dates. 
+                    Automated prep reminders, dosing alerts, and privacy-first offline tracking—no account required.
+                  </p>
+                  <div class="product-tags">
+                    <span class="product-tag">DPD Intelligence</span>
+                    <span class="product-tag">Lab Prep Assistant</span>
+                    <span class="product-tag">Privacy-First</span>
+                  </div>
+                  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08);">
+                    <a href="https://protocol-prod.web.app/" target="_blank" style="display: block; padding: 12px 16px; background: linear-gradient(135deg, rgba(38,229,164,0.15), rgba(38,229,164,0.08)); border: 1px solid rgba(38,229,164,0.4); border-radius: 8px; color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 600; text-align: center; transition: all 0.3s;">
+                      Use Protocol Free →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amore -->
+          <div class="product-card">
+            <div class="product-card-bg"></div>
+            <div class="product-card-inner">
+              <div class="product-card-front">
+                <div class="product-visual">
+                  <div style="width: 90%; height: 90%; background: rgba(10,10,12,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                      <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(239,68,68,0.4);"></div>
+                      <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.4);"></div>
+                      <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(34,197,94,0.4);"></div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <div style="width: 20px; height: 20px; background: rgba(139,92,246,0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px;">👤</div>
+                      <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; width: 80%;"></div>
+                        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; width: 60%;"></div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <div style="width: 20px; height: 20px; background: rgba(139,92,246,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px;">🤖</div>
+                      <div style="flex: 1; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius: 8px; padding: 8px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                          <div style="width: 6px; height: 6px; background: #8b5cf6; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                          <div style="font-size: 8px; color: #666; font-family: 'JetBrains Mono', monospace;">GENERATING...</div>
+                        </div>
+                        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-bottom: 4px;"></div>
+                        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; width: 90%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-content">
+                  <div class="product-header">
+                    <h3 class="product-title">Amore</h3>
+                    <span class="product-status status-purple">BETA</span>
+                  </div>
+                  <p class="product-description">
+                    AI clinical documentation that understands medical shorthand. Generate SOAP notes and HPI narratives 
+                    in seconds. Built for practitioners who know what they want to say.
+                  </p>
+                  <div class="product-tags">
+                    <span class="product-tag">Claude API</span>
+                    <span class="product-tag">SOAP Notes</span>
+                    <span class="product-tag">Medical Templates</span>
+                  </div>
+                  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 10px;">
+                    <div style="padding: 10px 16px; background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.25); border-radius: 8px; color: #aaa; font-size: 13px; font-weight: 600; text-align: center;">
+                      Public Beta Coming Q1 2025
+                    </div>
+                    <a href="/cdn-cgi/l/email-protection#036e716c70706c6e6243646e626a6f2d606c6e3c707661696660773e426e6c716623466d77667173716a7066234f6a60666d706a6d64" style="display: block; padding: 10px 16px; background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.35); border-radius: 8px; color: var(--secondary); text-decoration: none; font-size: 13px; font-weight: 600; text-align: center; transition: all 0.3s;">
+                      Enterprise License →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How We Can Work Together Section -->
+    <section style="padding: 100px 0; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+      <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 40px;">
+        <div style="max-width: 700px; margin: 0 auto 60px; text-align: center;">
+          <p class="section-eyebrow">How We Can Work Together</p>
+          <h2 class="section-title">Three Ways to Get Clinical Software</h2>
+          <p class="section-description">
+            Whether you need custom development, want to license existing tools, or need enterprise setup—I've got you covered.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto 60px;">
+          <!-- Custom Development -->
+          <div style="background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(38,229,164,0.2); border-radius: 20px; padding: 32px; transition: all 0.3s; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -100px; right: -100px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(38,229,164,0.1), transparent); filter: blur(60px);"></div>
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(38,229,164,0.2), rgba(38,229,164,0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; position: relative;">💻</div>
+            <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 12px;">Custom Development</h3>
+            <p style="font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 24px;">
+              Hire me to build your clinical app from scratch. Full-stack development with someone who understands both code and clinical workflows.
+            </p>
+            
+            <div style="margin-bottom: 24px;">
+              <div style="font-size: 12px; color: #666; font-family: 'JetBrains Mono', monospace; margin-bottom: 12px;">WHAT YOU GET:</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--primary);">✓</span> Custom clinical PWAs
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--primary);">✓</span> Medical calculators & tools
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--primary);">✓</span> HIPAA-compliant systems
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--primary);">✓</span> Direct communication (no PMs)
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px; background: rgba(38,229,164,0.05); border: 1px solid rgba(38,229,164,0.15); border-radius: 12px; margin-bottom: 20px;">
+              <div style="font-size: 28px; font-weight: 900; color: var(--primary); margin-bottom: 4px;">$5k–$25k</div>
+              <div style="font-size: 12px; color: #888;">Per project · 2–12 weeks</div>
+            </div>
+
+            <a href="/cdn-cgi/l/email-protection#1f726d706c6c70727e5f78727e7673317c7072206c6a7d757a7c6b225c6a6c6b70723f5b7a697a73706f727a716b3f56716e6a766d66" style="display: block; padding: 14px; background: linear-gradient(135deg, rgba(38,229,164,0.15), rgba(38,229,164,0.08)); border: 1px solid rgba(38,229,164,0.4); border-radius: 10px; color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 700; text-align: center; transition: all 0.3s;">
+              Discuss Your Project →
+            </a>
+          </div>
+
+          <!-- Product Licensing -->
+          <div style="background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(59,130,246,0.2); border-radius: 20px; padding: 32px; transition: all 0.3s; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -100px; right: -100px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(59,130,246,0.1), transparent); filter: blur(60px);"></div>
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; position: relative;">📦</div>
+            <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 12px;">Product Licensing</h3>
+            <p style="font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 24px;">
+              White-label my existing clinical tools for your practice. Get production-ready software deployed in days, not months.
+            </p>
+            
+            <div style="margin-bottom: 24px;">
+              <div style="font-size: 12px; color: #666; font-family: 'JetBrains Mono', monospace; margin-bottom: 12px;">AVAILABLE PRODUCTS:</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--tertiary);">✓</span> MF-ClinRef (PK Modeling Engine)
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--tertiary);">✓</span> Amore AI (SOAP Generator)
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--tertiary);">✓</span> Custom branding included
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--tertiary);">✓</span> Self-hosted or cloud options
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px; background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; margin-bottom: 20px;">
+              <div style="font-size: 28px; font-weight: 900; color: var(--tertiary); margin-bottom: 4px;">Custom</div>
+              <div style="font-size: 12px; color: #888;">One-time + monthly options</div>
+            </div>
+
+            <a href="/cdn-cgi/l/email-protection#cda0bfa2bebea2a0ac8daaa0aca4a1e3aea2a0f2beb8afa7a8aeb9f09dbfa2a9b8aeb9ed81a4aea8a3bea4a3aaed84a3bcb8a4bfb4" style="display: block; padding: 14px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.08)); border: 1px solid rgba(59,130,246,0.4); border-radius: 10px; color: var(--tertiary); text-decoration: none; font-size: 14px; font-weight: 700; text-align: center; transition: all 0.3s;">
+              Explore Licensing →
+            </a>
+          </div>
+
+          <!-- Enterprise Setup -->
+          <div style="background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.2); border-radius: 20px; padding: 32px; transition: all 0.3s; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -100px; right: -100px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139,92,246,0.1), transparent); filter: blur(60px);"></div>
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; position: relative;">🏢</div>
+            <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 12px;">Enterprise Setup</h3>
+            <p style="font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 24px;">
+              Custom Amore deployment for your clinic. Your medications, your templates, your workflow—all pre-configured.
+            </p>
+            
+            <div style="margin-bottom: 24px;">
+              <div style="font-size: 12px; color: #666; font-family: 'JetBrains Mono', monospace; margin-bottom: 12px;">WHAT'S INCLUDED:</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--secondary);">✓</span> Custom med formulary setup
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--secondary);">✓</span> Your SOAP templates
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--secondary);">✓</span> Multi-provider support
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc;">
+                  <span style="color: var(--secondary);">✓</span> Onboarding & training
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.15); border-radius: 12px; margin-bottom: 20px;">
+              <div style="font-size: 28px; font-weight: 900; color: var(--secondary); margin-bottom: 4px;">$3k–$10k</div>
+              <div style="font-size: 12px; color: #888;">Setup + monthly licensing</div>
+            </div>
+
+            <a href="/cdn-cgi/l/email-protection#2b465944585844464a6b4c464a42470548444614585e49414e485f166a4644594e0b6e455f4e595b5942584e0b784e5f5e5b" style="display: block; padding: 14px; background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(139,92,246,0.08)); border: 1px solid rgba(139,92,246,0.4); border-radius: 10px; color: var(--secondary); text-decoration: none; font-size: 14px; font-weight: 700; text-align: center; transition: all 0.3s;">
+              Get Amore for Your Clinic →
+            </a>
+          </div>
+        </div>
+
+        <div style="margin-top: 64px; text-align: center; padding: 48px 40px; background: linear-gradient(135deg, rgba(38,229,164,0.03), rgba(59,130,246,0.03)); border: 1px solid rgba(38,229,164,0.2); border-radius: 24px; max-width: 900px; margin-left: auto; margin-right: auto; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--tertiary), var(--secondary));"></div>
+          <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 16px; background: linear-gradient(135deg, var(--primary), var(--tertiary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Not Sure Which Option Fits?</h3>
+          <p style="font-size: 15px; color: #999; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Let's talk about your needs. I'll help you figure out whether custom development, licensing, or enterprise setup makes the most sense.
+          </p>
+          <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="/cdn-cgi/l/email-protection#315c435e42425e5c5071565c50585d1f525e5c0e4244535b5452450c7d544516421175584252444242117c481161435e5b545245" class="btn btn-primary" style="text-decoration: none;">
+              Email Me →
+            </a>
+            <a href="https://calendly.com/mrossoma" target="_blank" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+              📅 Book a Call
+            </a>
+          </div>
+          <div style="margin-top: 32px; font-size: 13px; color: #666;">
+            <span style="color: var(--primary); font-weight: 600;">⚡ Quick response time</span> · Usually reply within 24 hours
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bento-section" id="about">
+      <div class="container">
+        <!-- Why Me Section -->
+        <div style="max-width: 1000px; margin: 0 auto 80px; text-align: center;">
+          <p class="section-eyebrow">Credentials</p>
+          <h2 class="section-title" style="margin-bottom: 24px;">Licensed Clinician. Production Engineer. Zero Translators Needed.</h2>
+          <p class="section-description" style="max-width: 800px; margin: 0 auto 40px;">
+            Five years prescribing TRT, managing pharmacokinetic protocols, and documenting 10,000+ patient encounters. 
+            Three years shipping production web apps with real users and real PHI. 
+            The only developer in healthcare who's actually written prescriptions—and the code that manages them.
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; max-width: 900px; margin: 0 auto;">
+            <div style="text-align: center;">
+              <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--tertiary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">10,000+</div>
+              <div style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; margin-top: 8px;">Patient Encounters</div>
+              <div style="font-size: 11px; color: #444; margin-top: 4px;">Telehealth prescribing, 2019–2024</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, var(--tertiary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">3</div>
+              <div style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; margin-top: 8px;">Production Apps</div>
+              <div style="font-size: 11px; color: #444; margin-top: 4px;">Live users, real PHI, HIPAA-compliant</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, var(--secondary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0</div>
+              <div style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; margin-top: 8px;">Security Breaches</div>
+              <div style="font-size: 11px; color: #444; margin-top: 4px;">Local-first architecture, zero PHI leaks</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Technical Capabilities</p>
+          <h2 class="section-title">Built at the Intersection</h2>
+          <p class="section-description">
+            Clinical protocols are algorithms. SOAP notes are structured data. Pharmacokinetics is math. 
+            I don't just understand healthcare—I've architected systems that run it.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <div class="bento-item bento-item-large">
+            <div class="bento-icon">💻</div>
+            <h3 class="bento-title">Production Stack</h3>
+            <p class="bento-description" style="margin-bottom: 16px;">
+              <strong>Not a portfolio—this is what's running in production right now:</strong>
+            </p>
+            <div class="tech-grid">
+              <div class="tech-tag">React + TypeScript</div>
+              <div class="tech-tag">Firebase/Firestore</div>
+              <div class="tech-tag">PWA (offline-first)</div>
+              <div class="tech-tag">Claude API</div>
+              <div class="tech-tag">D3.js (PK curves)</div>
+              <div class="tech-tag">Tailwind CSS</div>
+              <div class="tech-tag">Vite</div>
+              <div class="tech-tag">Git/GitHub</div>
+            </div>
+            <p style="font-size: 12px; color: #666; margin-top: 12px; font-style: italic;">
+              Plus: Python, Node.js, REST APIs, WebSockets, IndexedDB, Service Workers
+            </p>
+          </div>
+
+          <div class="bento-item">
+            <div class="bento-icon">🔒</div>
+            <h3 class="bento-title">HIPAA Architecture</h3>
+            <p class="bento-description">
+              <strong>Local-first design = zero server-side PHI.</strong> Patient data never leaves their device unless explicitly synced. 
+              No cloud databases holding unencrypted medical records. No third-party analytics tracking patient behavior.
+            </p>
+            <p class="bento-description" style="margin-top: 12px; font-size: 13px; color: #888;">
+              This isn't marketing—it's how the apps are actually built.
+            </p>
+          </div>
+
+          <div class="bento-item">
+            <div class="bento-icon">🧠</div>
+            <h3 class="bento-title">Clinical Domain Expertise</h3>
+            <p class="bento-description">
+              <strong>I've prescribed these protocols in real clinical practice:</strong>
+            </p>
+            <ul style="text-align: left; margin: 12px 0 0 20px; font-size: 13px; color: #aaa; line-height: 1.8;">
+              <li>Testosterone pharmacokinetics (Cyp, Prop, Pellets)</li>
+              <li>Biomarker interpretation (lipids, metabolic panels, hormones)</li>
+              <li>Drug-drug interactions and contraindications</li>
+              <li>SOAP documentation and clinical decision logic</li>
+            </ul>
+          </div>
+
+          <div class="bento-item bento-item-large">
+            <div class="bento-icon">⚡</div>
+            <h3 class="bento-title">System Design Principles</h3>
+            <p class="bento-description" style="margin-bottom: 12px;">
+              <strong>Built for clinicians, not committees:</strong>
+            </p>
+            <ul style="text-align: left; margin: 0 0 0 20px; font-size: 13px; color: #aaa; line-height: 1.8;">
+              <li><strong>PWA-first:</strong> Install once, works offline, feels native</li>
+              <li><strong>Local storage:</strong> Instant load times, no server latency</li>
+              <li><strong>Smart syncing:</strong> Background updates when online</li>
+              <li><strong>Mobile-optimized:</strong> Thumb-zone UI, readable fonts</li>
+              <li><strong>Zero cognitive load:</strong> Every interaction is obvious</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="max-width: 800px; margin: 60px auto 0; padding: 32px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; text-align: center;">
+          <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #ffffff;">The Real Differentiator</h3>
+          <p style="font-size: 16px; color: #aaa; line-height: 1.7; margin-bottom: 0;">
+            Most healthcare software is built by engineers who've never touched a patient. 
+            Most clinical protocols are managed by doctors who've never shipped code. 
+            I'm the person who's done both—at scale, in production, with real stakes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Matt Ross — MultiFactor Solutions</p>
+        <div class="footer-links">
+          <a href="https://multifitmatt.github.io/MF-ClinRef/" class="footer-link">MF-ClinRef</a>
+          <a href="https://protocol-prod.web.app/" class="footer-link">Protocol</a>
+          <a href="https://github.com/multifitmatt" class="footer-link">GitHub</a>
+          <a href="/cdn-cgi/l/email-protection#a6cbd4c9d5d5c9cbc7e6c1cbc7cfca88c5c9cb" class="footer-link">Email</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Scrolled nav state
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('nav');
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Floating card carousel
+    const cards = ['card-protocol', 'card-clinref', 'card-amore'];
+    const cardClasses = ['protocol', 'clinref', 'amore'];
+    let currentIndex = 0;
+    const container = document.querySelector('.floating-card-container');
+
+    // Set initial class
+    container.classList.add('protocol');
+
+    function rotateCards() {
+      const currentCard = document.getElementById(cards[currentIndex]);
+      
+      // Add morphing state to container for effects
+      container.classList.add('morphing');
+      
+      // Start morphing out current card
+      currentCard.classList.add('morphing-out');
+      
+      // After 400ms (halfway through morph), switch cards
+      setTimeout(() => {
+        currentCard.classList.remove('active', 'morphing-out');
+        container.classList.remove(cardClasses[currentIndex]);
+        
+        // Move to next card
+        currentIndex = (currentIndex + 1) % cards.length;
+        
+        // Start morphing in next card
+        const nextCard = document.getElementById(cards[currentIndex]);
+        nextCard.classList.add('active');
+        container.classList.add(cardClasses[currentIndex]);
+        
+        // Remove morphing state after transition completes
+        setTimeout(() => {
+          container.classList.remove('morphing');
+        }, 400);
+      }, 400);
+    }
+
+    // Rotate every 5 seconds (longer to appreciate each tool)
+    setInterval(rotateCards, 5000);
+  </script>
+</body>
+</html>
